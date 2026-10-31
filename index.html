@@ -794,54 +794,151 @@ function aiShoot(){
 /* ================= Networking (PeerJS) ================= */
 const CODE_CHARS="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const genCode=()=>Array.from({length:5},()=>CODE_CHARS[Math.floor(Math.random()*CODE_CHARS.length)]).join("");
-const peerOK=()=>{ if(typeof Peer==="undefined"){ menuMsg("Online play needs an internet connection. You can still practise vs the computer."); return false; } return true; };
-
+// Keep PeerJS's own ICE configuration, including its fallback relay servers.
+// Setting only a STUN server here could make restricted school networks fail.
+const PEER_OPTIONS={debug:2};
+const peerOK=()=>{
+  if(typeof Peer==="undefined"){
+    menuMsg("PeerJS could not load. Check internet access or content blockers. Practice mode still works.");
+    return false;
+  }
+  if(!window.RTCPeerConnection){
+    menuMsg("This browser does not support WebRTC. Try an updated Chrome, Edge or Firefox.");
+    return false;
+  }
+  return true;
+};
+function peerErrorText(err){
+  const type=err && err.type || "unknown";
+  console.error("PeerJS failure:",type,err);
+  if(type==="peer-unavailable") return "No game found with that code. Ask the host to create a new game.";
+  if(type==="network" || type==="socket-error" || type==="socket-closed" || type==="server-error")
+    return "Cannot reach the PeerJS signaling server ("+type+"). Check your network or try a hotspot.";
+  if(type==="webrtc") return "WebRTC negotiation failed. Try another network; some school networks require a TURN relay.";
+  return "Online connection failed ("+type+"). Open the browser console for details.";
+}
+function clearJoinTimer(){clearTimeout(joinTimer);joinTimer=null;}
 function hookConn(c){
   conn=c;
-  const begin=()=>{ clearTimeout(joinTimer); startGame(); };
-  if(c.open) begin(); else c.on("open",begin);
+  let connected=false;
+  const begin=()=>{
+    if(conn!==c || connected) return;
+    connected=true;
+    clearJoinTimer();
+    console.info("PeerJS data channel established with",c.peer);
+    startGame();
+  };
+  c.on("open",begin);
   c.on("data",handle);
-  c.on("close",()=>{ if(phase!=="menu") show("leftModal",true); });
-  c.on("error",()=>{ if(phase!=="menu") show("leftModal",true); });
+  c.on("close",()=>{
+    if(conn!==c) return;
+    console.warn("PeerJS data connection closed",c.peer);
+    if(!connected){
+      if(mode==="guest") failJoin("The peer connection closed before opening. Try another network or browser.");
+      else {conn=null;clearJoinTimer();menuMsg("The other player could not connect. Ask them to try again.");}
+    } else if(phase!=="menu") show("leftModal",true);
+  });
+  c.on("error",err=>{
+    if(conn!==c) return;
+    console.error("PeerJS data channel error",err);
+    if(!connected){
+      if(mode==="guest") failJoin("Could not establish a peer connection. Try another network or browser.");
+      else {conn=null;clearJoinTimer();menuMsg("Peer connection failed. Ask the other player to retry.");}
+    } else if(phase!=="menu") show("leftModal",true);
+  });
+  if(c.open) begin();
+  else {
+    clearJoinTimer();
+    joinTimer=setTimeout(()=>{
+      if(conn!==c || connected) return;
+      if(mode==="guest") failJoin("Timed out establishing WebRTC (20 s). Check both networks or try mobile hotspots.");
+      else {console.warn("Host waited 20 s for data channel to open");conn=null;menuMsg("The other player could not establish a peer connection. Ask them to retry.");}
+    },20000);
+  }
 }
 function createGame(){
   if(!peerOK()) return;
-  menuMsg(""); code=genCode(); mode="host";
-  peer=new Peer("sinkfleet-"+code);
-  peer.on("open",()=>{
+  cancelHost();
+  menuMsg("");code=genCode();mode="host";
+  const p=peer=new Peer("sinkfleet-"+code,PEER_OPTIONS);
+  clearJoinTimer();
+  joinTimer=setTimeout(()=>{
+    if(peer===p && phase==="menu" && !p.open){
+      cancelHost();menuMsg("Timed out contacting the PeerJS server. Try another network.");
+    }
+  },15000);
+  p.on("open",()=>{
+    if(peer!==p) return;
+    clearJoinTimer();
     $("codeBox").innerHTML=code.split("").map(ch=>`<span>${ch}</span>`).join("");
-    show("menuMain",false); show("menuHost",true);
+    show("menuMain",false);show("menuHost",true);
+    console.info("Host registered with PeerJS server:",p.id);
   });
-  peer.on("connection",c=>{ if(conn){ c.close(); return; } hookConn(c); });
-  peer.on("disconnected",()=>{ if(peer && !peer.destroyed && phase==="menu") try{peer.reconnect();}catch(e){} });
-  peer.on("error",err=>{
-    if(err.type==="unavailable-id"){ peer.destroy(); createGame(); return; }
-    cancelHost(); menuMsg("Could not create the game. Check your internet and try again.");
+  p.on("connection",c=>{
+    if(peer!==p){c.close();return;}
+    if(conn){c.close();return;}
+    menuMsg("Other player found. Establishing secure connection...");
+    hookConn(c);
+  });
+  p.on("disconnected",()=>{
+    if(peer!==p) return;
+    if(phase==="menu" && !p.destroyed){
+      console.warn("Host disconnected from signaling server; reconnecting");
+      try{p.reconnect();}catch(e){console.error(e);}
+    }
+  });
+  p.on("error",err=>{
+    if(peer!==p) return;
+    if(err.type==="unavailable-id"){
+      cancelHost();createGame();return;
+    }
+    const message=peerErrorText(err);
+    if(phase==="menu"){cancelHost();menuMsg(message);}
+    else console.warn(message);
   });
 }
 function cancelHost(){
-  if(peer){ try{peer.destroy();}catch(e){} peer=null; }
-  conn=null; mode=null; show("menuHost",false); show("menuMain",true);
+  clearJoinTimer();
+  if(conn){try{conn.close();}catch(e){}conn=null;}
+  if(peer){try{peer.destroy();}catch(e){}peer=null;}
+  mode=null;show("menuHost",false);show("menuMain",true);
 }
 function joinGame(){
   if(!peerOK()) return;
   const c=$("codeIn").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,"");
-  if(c.length!==5){ menuMsg("Please type the 5-character code."); return; }
-  menuMsg("Connecting…"); code=c; mode="guest";
-  peer=new Peer();
-  peer.on("open",()=>{
-    const cn=peer.connect("sinkfleet-"+c,{reliable:true});
+  if(c.length!==5){menuMsg("Please type the 5-character code.");return;}
+  if(peer) cancelHost();
+  menuMsg("Connecting to signaling server...");code=c;mode="guest";
+  const p=peer=new Peer(PEER_OPTIONS);
+  clearJoinTimer();
+  joinTimer=setTimeout(()=>{
+    if(peer===p && phase==="menu" && !p.open)
+      failJoin("Timed out reaching PeerJS server (15 s). Check internet access or try another network.");
+  },15000);
+  p.on("open",()=>{
+    if(peer!==p) return;
+    clearJoinTimer();
+    menuMsg("Finding host and establishing WebRTC connection...");
+    const cn=p.connect("sinkfleet-"+c,{reliable:true});
     hookConn(cn);
-    joinTimer=setTimeout(()=>{ if(phase==="menu"){ failJoin("Could not connect. Check the code and try again."); } },15000);
   });
-  peer.on("error",err=>{
-    failJoin(err.type==="peer-unavailable"?"No game found with that code. Check it and try again.":"Connection problem. Please try again.");
+  p.on("error",err=>{
+    if(peer!==p) return;
+    const message=peerErrorText(err);
+    if(phase==="menu") failJoin(message);
+    else console.warn(message);
+  });
+  p.on("disconnected",()=>{
+    if(peer===p && phase==="menu") failJoin("Lost the signaling-server connection. Check your network.");
   });
 }
-function failJoin(text){
-  clearTimeout(joinTimer);
-  if(peer){ try{peer.destroy();}catch(e){} peer=null; }
-  conn=null; mode=null; menuMsg(text);
+function failJoin(message){
+  clearJoinTimer();
+  const c=conn,p=peer;
+  conn=null;peer=null;mode=null;
+  try{c&&c.close();}catch(e){}
+  try{p&&p.destroy();}catch(e){}
+  menuMsg(message);
 }
 
 /* ================= Flow ================= */
@@ -852,7 +949,7 @@ function startGame(){
   $("log").hidden=true;
 }
 function leave(){
-  clearTimeout(joinTimer);
+  clearJoinTimer();
   try{ conn&&conn.close(); }catch(e){}
   try{ peer&&peer.destroy(); }catch(e){}
   conn=null; peer=null; mode=null; ai=null; code="";

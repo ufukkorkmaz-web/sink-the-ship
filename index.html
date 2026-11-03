@@ -181,6 +181,86 @@ h1{margin:6px 0 4px;font-size:2.3rem;letter-spacing:.5px}
 .conf{position:fixed;top:-20px;width:10px;height:14px;z-index:60;pointer-events:none;animation:fall 3.2s linear forwards}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
 
+/* ---------- Menu extras ---------- */
+.textin{
+  font:inherit;font-size:1.05rem;font-weight:600;text-align:center;color:var(--txt);width:100%;
+  padding:10px;border-radius:16px;border:1px solid var(--edge);background:rgba(255,255,255,.1);outline:none;
+}
+.textin::placeholder{color:rgba(255,255,255,.4)}
+.textin:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(94,234,212,.25)}
+
+/* ---------- Classroom screen ---------- */
+#screenView{
+  display:flex;flex-direction:column;min-height:0;max-width:1800px;
+  --cell:clamp(18px,min(calc((100vw - 480px)/21.4),calc((100dvh - 330px)/10.7)),62px);
+}
+.scr-main{display:grid;grid-template-columns:auto minmax(230px,330px) auto;gap:14px;justify-content:center;align-items:center;flex:1;min-height:0}
+.pcard{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 14px 12px;transition:box-shadow .3s,border-color .3s}
+.pcard .phead{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%}
+.pname{font-size:clamp(1.1rem,1.8vw,1.9rem);font-weight:800;max-width:12ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pwins{font-size:clamp(.95rem,1.4vw,1.5rem);font-weight:800;padding:2px 12px;border-radius:999px;background:rgba(255,255,255,.18);border:1px solid var(--edge);white-space:nowrap}
+.pline{display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:center;align-items:center;font-size:.85rem;color:var(--muted)}
+.badge{padding:3px 12px;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);font-weight:700;color:var(--txt);letter-spacing:.5px}
+.badge.on{background:rgba(94,234,212,.4);border-color:var(--accent);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 18px rgba(94,234,212,.7)}}
+.pcard.active{border-color:var(--accent);box-shadow:0 0 44px rgba(94,234,212,.45),inset 0 1px 0 rgba(255,255,255,.45)}
+.pcard.winner{border-color:#ffd166;box-shadow:0 0 50px rgba(255,209,102,.55),inset 0 1px 0 rgba(255,255,255,.45)}
+.pcard.empty{opacity:.65}
+.pcard .fleetrow{margin-top:2px}
+.center{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;text-align:center;width:100%;overflow:hidden;max-height:calc(var(--cell)*10.7 + 150px)}
+.center .round{font-size:.85rem;letter-spacing:3px;color:var(--muted);font-weight:700}
+.center .score{display:flex;align-items:center;gap:14px;font-size:clamp(2rem,4vw,3.6rem);font-weight:800;line-height:1}
+.center .score i{font-style:normal;opacity:.6}
+.center .vs{font-size:.95rem;color:var(--muted);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.center .vs em{opacity:.7;margin:0 4px}
+.center .cl{font-size:.8rem;letter-spacing:2px;color:var(--muted);font-weight:700;margin-top:4px}
+.codebox.small{margin:2px 0;gap:6px}
+.codebox.small span{width:40px;height:50px;font-size:1.7rem;border-radius:12px}
+.center .hint{font-size:.85rem;color:var(--muted);line-height:1.35}
+.center .turn{font-size:1.1rem;font-weight:700;line-height:1.3}
+.center .turn .arrow{display:block;font-size:2rem;color:var(--accent);animation:nudge 1s ease-in-out infinite}
+@keyframes nudge{50%{transform:translateX(6px)}}
+.center .winner{font-size:2.4rem;font-weight:800;line-height:1.2}
+.center .winner .hint{font-size:1rem}
+.feed{width:100%;flex:1;min-height:0;display:flex;flex-direction:column;gap:4px;font-size:.88rem;text-align:left;overflow:hidden}
+.feed div{padding:4px 10px;border-radius:10px;background:rgba(255,255,255,.08);color:var(--muted)}
+.feed div:first-child{color:var(--txt);background:rgba(255,255,255,.16)}
+.feed .hit{color:#ffb4bb}.feed .sunk{color:#ffd166;font-weight:700}
+
+
+/* ---------- Questions ---------- */
+select.btn{appearance:none;-webkit-appearance:none;padding-right:14px}
+select.btn option{color:#042a3a;background:#e8f4fb}
+#screenView{position:relative}
+.scr-q{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(4,20,45,.62);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-radius:24px}
+.qwin{width:min(1150px,100%);padding:24px 32px;display:flex;flex-direction:column;gap:14px;animation:pop .35s both}
+.qhead{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:clamp(1.1rem,2vw,1.8rem)}
+.qteam{padding:4px 18px;border-radius:999px;background:rgba(94,234,212,.3);border:1px solid var(--accent)}
+.qsec{font-size:clamp(1.5rem,2.8vw,2.6rem);font-variant-numeric:tabular-nums}
+.qbarw{height:12px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden}
+.qbarw i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#5eead4,#38bdf8);border-radius:99px}
+.qtext{font-size:clamp(1.4rem,2.9vw,2.7rem);font-weight:700;line-height:1.25;text-align:center;padding:4px 0}
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.qo{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:18px;border:1px solid var(--edge);background:rgba(255,255,255,.14);font-size:clamp(1.05rem,2vw,1.9rem);font-weight:600}
+.qo b{display:flex;width:2.1em;height:2.1em;align-items:center;justify-content:center;border-radius:12px;background:rgba(255,255,255,.25);flex-shrink:0}
+.qo.right{background:rgba(74,222,128,.5);border-color:#86efac}
+.qo.wrong{background:rgba(255,93,108,.5);border-color:#ff9aa2}
+.verdict{text-align:center;font-size:clamp(1.05rem,2.1vw,1.9rem);font-weight:800;padding:10px 14px;border-radius:16px}
+.verdict.ok{background:rgba(74,222,128,.3)}.verdict.bad{background:rgba(255,93,108,.3)}
+.tbtns{display:flex;gap:10px;justify-content:center}
+.modal .glass.qbox{width:min(660px,100%);padding:22px;text-align:left}
+.qbox .qbarw{margin-bottom:12px}
+.qbox .qlabel{font-size:.8rem;letter-spacing:3px;color:var(--muted);font-weight:700}
+.qbox h2{font-size:1.45rem;line-height:1.3;margin:6px 0 14px}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qopt{display:flex;align-items:center;gap:10px;text-align:left;font-size:1.02rem}
+.qopt b{display:flex;width:1.9em;height:1.9em;align-items:center;justify-content:center;border-radius:10px;background:rgba(255,255,255,.28);flex-shrink:0}
+.qopt.picked{outline:2px solid var(--accent)}
+.qopt.right{background:rgba(74,222,128,.55)}
+.qopt.wrong{background:rgba(255,93,108,.55)}
+.qbox #qNote{margin:12px 0 0;min-height:1.4em;color:var(--txt);font-weight:600}
+@media (max-width:620px){ .qopts{grid-template-columns:1fr} }
+
 @media (max-height:640px){ .tip{display:none} }
 /* portrait screens (phones): stack the two boards, still no scrolling */
 @media (max-aspect-ratio:1/1){
@@ -214,25 +294,16 @@ h1{margin:6px 0 4px;font-size:2.3rem;letter-spacing:.5px}
       <p class="sub">Find and sink the enemy ships before they sink yours!</p>
 
       <div id="menuMain" class="stack">
-        <button class="btn primary" id="btnCreate">Create a game</button>
-        <div class="or">or join a friend with their code</div>
+        <button class="btn primary" id="btnCreate">Start classroom screen</button>
+        <div class="or">or join a room as a player</div>
+        <input id="nameIn" class="textin" maxlength="12" placeholder="Your name" autocomplete="off" spellcheck="false">
         <div class="joinrow">
           <input id="codeIn" maxlength="5" placeholder="CODE" autocomplete="off" autocapitalize="characters" spellcheck="false">
-          <button class="btn" id="btnJoin">Join</button>
+          <button class="btn primary" id="btnJoin">Play</button>
         </div>
+        <button class="btn small" id="btnWatch">Watch only (second screen)</button>
         <button class="btn" id="btnAI">Practice vs computer</button>
         <button class="linkbtn" id="btnHelp">How to play</button>
-      </div>
-
-      <div id="menuHost" hidden>
-        <p class="sub" style="margin-bottom:0">Your game code is</p>
-        <div class="codebox" id="codeBox"></div>
-        <p class="sub">Your classmate opens this game, types the code and presses <b>Join</b>.</p>
-        <p class="sub dots" style="margin-bottom:18px">Waiting for your opponent</p>
-        <div class="row" style="display:flex;gap:10px;justify-content:center">
-          <button class="btn small" id="btnCopy">Copy code</button>
-          <button class="btn small warn" id="btnCancel">Cancel</button>
-        </div>
       </div>
       <p class="msg" id="menuMsg"></p>
     </div>
@@ -254,13 +325,13 @@ h1{margin:6px 0 4px;font-size:2.3rem;letter-spacing:.5px}
 
     <div class="boards">
       <div class="glass panel" id="foePanel">
-        <h2>🎯 Enemy waters</h2>
+        <h2 id="foeTitle">🎯 Enemy waters</h2>
         <div id="foeGrid" class="grid enemy"></div>
         <div id="foeFleet" class="fleetrow"></div>
       </div>
 
       <div class="glass panel" id="mePanel">
-        <h2>🚢 Your fleet</h2>
+        <h2 id="meTitle">🚢 Your fleet</h2>
         <div id="meGrid" class="grid"></div>
         <div id="meFleet" class="fleetrow"></div>
       </div>
@@ -280,6 +351,33 @@ h1{margin:6px 0 4px;font-size:2.3rem;letter-spacing:.5px}
 
     <div class="glass log" id="log"></div>
   </section>
+
+  <!-- CLASSROOM SCREEN / VIEWER -->
+  <section id="screenView" class="screen" hidden>
+    <header class="glass bar">
+      <div class="title">⚓ Sink the Fleet</div>
+      <div class="chip" id="scrRoom"></div>
+      <div class="right">
+        <select class="btn small" id="qMode" title="When should teams answer a question?">
+          <option value="from2">Questions: from turn 2</option>
+          <option value="from1">Questions: every turn</option>
+          <option value="off">Questions: off</option>
+        </select>
+        <button class="btn small" id="btnNext" disabled>Next round</button>
+        <button class="btn small" id="btnScrCopy">Copy code</button>
+        <button class="btn small" id="btnScrMute" title="Sound on/off">🔇</button>
+        <button class="btn small" id="btnFull" title="Full screen">⛶</button>
+        <button class="btn small warn" id="btnScrLeave">Leave</button>
+      </div>
+    </header>
+    <div class="glass status" id="scrStatus"></div>
+    <div class="scr-main">
+      <div class="glass panel pcard" id="pc0"></div>
+      <div class="glass panel center" id="scrCenter"></div>
+      <div class="glass panel pcard" id="pc1"></div>
+    </div>
+    <div class="scr-q" id="scrQ" hidden></div>
+  </section>
 </div>
 
 <!-- Modals -->
@@ -287,7 +385,7 @@ h1{margin:6px 0 4px;font-size:2.3rem;letter-spacing:.5px}
   <div class="glass">
     <h2>How to play</h2>
     <ol>
-      <li>Place your 5 ships on your grid. Press <b>Ready!</b></li>
+      <li>Type your name and the room code, then place your 5 ships. Press <b>Ready!</b></li>
       <li>Take turns. Click a square in <b>Enemy waters</b> to fire.</li>
       <li><b style="color:#ff8a94">Red peg</b> = hit. <b>White peg</b> = miss.</li>
       <li>When every square of a ship is hit, it sinks.</li>
@@ -312,8 +410,18 @@ h1{margin:6px 0 4px;font-size:2.3rem;letter-spacing:.5px}
 <div class="modal" id="leftModal" hidden>
   <div class="glass">
     <h2>Opponent left</h2>
-    <p>The other player closed the game or lost connection.</p>
-    <div class="row"><button class="btn primary" id="btnLeftOk">Back to menu</button></div>
+    <p>The other player left the room. You can wait here for a new player.</p>
+    <div class="row"><button class="btn primary" id="btnLeftWait">Wait for a new player</button><button class="btn" id="btnLeftOk">Back to menu</button></div>
+  </div>
+</div>
+
+<div class="modal" id="qModal" hidden>
+  <div class="glass qbox">
+    <div class="qbarw"><i id="qBar"></i></div>
+    <div class="qlabel">QUESTION</div>
+    <h2 id="qText"></h2>
+    <div class="qopts" id="qOpts"></div>
+    <p id="qNote"></p>
   </div>
 </div>
 
@@ -328,6 +436,25 @@ const FLEET = [
   {name:"Submarine",  len:3},
   {name:"Destroyer",  len:2}
 ];
+/* ================= QUESTION BANK =================
+   Replace these with your own. Format: {q:"question", o:["A","B","C","D"], a:index of the correct option (0=A, 1=B, 2=C, 3=D)} */
+const QUESTIONS = [
+  {q:"She ___ to school by bus every day.", o:["go","goes","going","gone"], a:1},
+  {q:"I have ___ finished my homework.", o:["yet","already","still","ever"], a:1},
+  {q:"What is the opposite of “generous”?", o:["kind","selfish","brave","polite"], a:1},
+  {q:"If it rains tomorrow, we ___ at home.", o:["will stay","would stay","stayed","staying"], a:0},
+  {q:"A person who writes books is called an ___.", o:["author","actor","editor","artist"], a:0},
+  {q:"He asked me where I ___.", o:["live","lived","am living","lives"], a:1},
+  {q:"Which word means “very tired”?", o:["exhausted","excited","embarrassed","energetic"], a:0},
+  {q:"There aren't ___ apples in the basket.", o:["some","any","much","a"], a:1},
+  {q:"I'm looking forward ___ you next week.", o:["to see","to seeing","seeing","see"], a:1},
+  {q:"The film was so boring that I ___ asleep.", o:["fell","felt","fall","fallen"], a:0},
+  {q:"Which sentence is correct?", o:["He don't like pizza.","He doesn't likes pizza.","He doesn't like pizza.","He not like pizza."], a:2},
+  {q:"“Huge” means the same as ___.", o:["tiny","enormous","narrow","quiet"], a:1},
+  {q:"You ___ wear a seatbelt. It's the law.", o:["must","can","might","may"], a:0},
+  {q:"She is the ___ student in our class.", o:["more tall","most tall","tallest","taller"], a:2}
+];
+let QUESTION_SECONDS = 30;       // time to answer before it counts as wrong
 const coord = (r,c) => String.fromCharCode(65+c) + (r+1);
 const grid2d = v => Array.from({length:SIZE}, () => Array(SIZE).fill(v));
 
@@ -394,8 +521,8 @@ const me = new Board();
 let enemy = grid2d(0);           // 0 water, 1 miss, 2 hit, 3 sunk ship, 4 revealed ship
 let enemySunk = new Set();
 let enemyShips = [];             // {name,cells,sunk} — only ships we have sunk or that were revealed
-let mode = null;                 // 'host' | 'guest' | 'ai'
-let phase = "menu";              // menu | setup | battle | over
+let mode = null;                 // 'screen' | 'player' | 'viewer' | 'ai'
+let phase = "menu";              // menu | setup | battle | over | screen (classroom screen / viewer)
 let realtime = null, channel = null, code = "", playerId = crypto.randomUUID();
 let opponentId = null, joined = false;
 let selected = 0, horiz = true, locked = false;
@@ -405,6 +532,13 @@ let logLines = [];
 let ai = null;
 let meCells = [], foeCells = [];
 let joinTimer = null;
+// classroom-version state
+let myName = "", opponentName = "", screenId = null, mySlot = -1, lastState = null, lastStateAt = 0;
+let S = null, collision = false, lastRendered = null, scrLastEv = -1, scrNoteText = "", scrConfettiKey = "";
+let hbTimer = null, scrPub = null, scrTick = null, retryTimer = null, viewTimer = null, qBarTimer = null;
+// questions
+let qLock = false, qState = "", qEnd = 0, qTotal = 30, qTick = null, qCur = 0;          // player side
+let qTimeout = null, qNext = null, crossTimer = null, qDeadlineLocal = 0, scrQKey = "", scrLastCross = 0;   // screen side
 
 /* ================= Sound ================= */
 let actx = null, muted = false;
@@ -560,7 +694,7 @@ function renderFoeBase(){
     if(s===2) el.classList.add("hit");
     if(s===3) el.classList.add("hit","sunk");
     if(s===4) el.classList.add("revealed");
-    if(s===0 && phase==="battle" && myTurn) el.classList.add("can");
+    if(s===0 && phase==="battle" && myTurn && !qLock) el.classList.add("can");
     if(lastFx && lastFx[0]==="foe" && lastFx[1]===r && lastFx[2]===c){
       el.classList.add("fx"); if(s>=2) el.classList.add("hitfx");
     }
@@ -598,10 +732,15 @@ function renderAll(){
 function refreshStatus(){
   if(phase==="setup"){
     if(!locked) setStatus("Place your ships. Choose a ship, then click your grid.","");
-    else setStatus(theyReady||mode==="ai" ? "Starting…" : "Waiting for your opponent to be ready…","");
+    else if(mode==="ai") setStatus("Starting…","");
+    else if(!opponentId) setStatus("Waiting for an opponent to join the room…","");
+    else setStatus("Waiting for your opponent to be ready…","");
   }else if(phase==="battle"){
-    if(myTurn) setStatus("🎯 Your turn! Click a square in Enemy waters.","you");
-    else setStatus("⏳ The enemy is aiming…","them");
+    const foe=(mode==="player"&&opponentName)?opponentName:"The enemy";
+    if(myTurn&&qLock) setStatus(qState==="mine"?"❓ Answer the question to take your shot!":"❓ Your turn is coming — wait for the big screen…","you");
+    else if(myTurn) setStatus("🎯 Your turn! Click a square in Enemy waters.","you");
+    else if(qState==="theirs") setStatus("❓ "+foe+" is answering a question…","them");
+    else setStatus("⏳ "+foe+" is aiming…","them");
   }
 }
 
@@ -657,14 +796,14 @@ $("btnReady").onclick=()=>{
   locked=true; iReady=true; selected=null;
   renderAll(); refreshStatus();
   if(mode==="ai"){ setTimeout(()=>startBattle(Math.random()<.5),600); }
-  else{ send({t:"ready"}); checkStart(); }
+  else{ sendScreen({type:"ready"}); }
 };
 
 /* ================= Fire ================= */
 $("foeGrid").addEventListener("click",e=>{
   const t=e.target.closest(".cell"); if(!t) return;
   const r=+t.dataset.r, c=+t.dataset.c;
-  if(phase!=="battle"||!myTurn||enemy[r][c]!==0) return;
+  if(phase!=="battle"||!myTurn||qLock||enemy[r][c]!==0) return;
   myTurn=false; sfx.fire();
   renderFoe(); setStatus(`💥 Fired at ${coord(r,c)}… waiting for the result`,"them");
   send({t:"shot",r,c});
@@ -677,27 +816,18 @@ function send(msg){
     channel.publish("game", {sender:playerId, target:opponentId, body:msg}).catch(e=>console.error("Ably publish failed",e));
   }
 }
-function checkStart(){
-  if(mode==="host" && iReady && theyReady){
-    const first=Math.random()<.5;
-    send({t:"start",youFirst:!first});
-    startBattle(first);
-  }
-}
 function startBattle(first){
-  setPhase("battle"); myTurn=first;
+  setPhase("battle"); myTurn=first; qLock=(mode==="player"&&first); qState="";
   addLog(first?"The battle begins — you shoot first!":"The battle begins — the enemy shoots first.");
   renderAll(); refreshStatus();
   if(mode==="ai" && !myTurn) setTimeout(aiShoot,1000);
 }
 function handle(msg){
+  if(!msg||typeof msg!=="object") return;
   switch(msg.t){
-    case "ready": theyReady=true; if(phase==="setup"&&!locked) addLog("Your opponent is ready."); refreshStatus(); checkStart(); break;
-    case "start": startBattle(!!msg.youFirst); break;
-    case "shot": onShot(msg.r,msg.c); break;
+    case "shot": if(Number.isInteger(msg.r)&&Number.isInteger(msg.c)&&msg.r>=0&&msg.c>=0&&msg.r<SIZE&&msg.c<SIZE) onShot(msg.r,msg.c); break;
     case "result": onResult(msg); break;
     case "reveal": applyReveal(msg.ships); renderFoe(); break;
-    case "rematch": if(phase==="over"){ resetForNewGame(); } break;
   }
 }
 function onShot(r,c){
@@ -711,20 +841,23 @@ function onShot(r,c){
   else { sfx.splash(); addLog(`Enemy fired at ${coord(r,c)} — miss.`); }
   renderAll();
   if(res.win){ endGame(false); }
-  else{ myTurn=true; renderFoe(); refreshStatus(); }
+  else{ myTurn=true; if(mode==="player"){ qLock=true; qState=""; } renderFoe(); refreshStatus(); }
 }
 function onResult(m){
+  const who=m.auto?"The computer fired at":"You fired at";
   enemy[m.r][m.c]=m.hit?2:1;
   if(m.sunk){ m.sunk.cells.forEach(([r,c])=>enemy[r][c]=3); enemySunk.add(m.sunk.name); enemyShips=enemyShips.filter(x=>x.name!==m.sunk.name); enemyShips.push({name:m.sunk.name,cells:m.sunk.cells,sunk:true}); }
   lastFx=["foe",m.r,m.c];
-  if(m.sunk){ sfx.sunk(); addLog(`You fired at ${coord(m.r,m.c)} — you sank their ${m.sunk.name}! 💥`,"sunkl"); }
-  else if(m.hit){ sfx.hit(); addLog(`You fired at ${coord(m.r,m.c)} — HIT! 🔥`,"hitl"); }
-  else { sfx.splash(); addLog(`You fired at ${coord(m.r,m.c)} — miss.`); }
+  if(m.sunk){ sfx.sunk(); addLog(`${who} ${coord(m.r,m.c)} — ${m.auto?"it sank":"you sank"} their ${m.sunk.name}! 💥`,"sunkl"); }
+  else if(m.hit){ sfx.hit(); addLog(`${who} ${coord(m.r,m.c)} — HIT! 🔥`,"hitl"); }
+  else { sfx.splash(); addLog(`${who} ${coord(m.r,m.c)} — miss.`); }
   if(m.win){
     if(m.reveal) applyReveal(m.reveal);
     renderAll(); endGame(true);
   }else{
-    myTurn=false; renderAll(); refreshStatus();
+    if(m.auto){ if(mode==="player"){ myTurn=true; qLock=true; qState=""; } }   // the other team lost its shot: it is my turn
+    else myTurn=false;
+    renderAll(); refreshStatus();
     if(mode==="ai") setTimeout(aiShoot,1000);
   }
 }
@@ -735,24 +868,29 @@ function applyReveal(ships){
   });
 }
 function endGame(won){
-  setPhase("over"); myTurn=false;
+  setPhase("over"); myTurn=false; closeQModal();
   if(won){ send({t:"reveal",ships:me.shipData()}); }
   else if(mode==="ai"){ applyReveal(ai.board.shipData()); renderFoe(); }
   setStatus(won?"🏆 You sank the whole enemy fleet!":"💀 Your fleet has been sunk.", won?"you":"them");
   setTimeout(()=>{
     $("endTitle").textContent = won?"Victory! 🏆":"Defeat 💀";
-    $("endText").textContent = won?"Great shooting, Admiral! You sank all 5 enemy ships.":"The enemy sank all your ships. Better luck next time!";
+    $("endText").textContent = (won?"Great shooting, Admiral! You sank all 5 enemy ships.":"The enemy sank all your ships. Better luck next time!")+scoreLine();
+    $("btnAgain").disabled=false; $("btnAgain").textContent = mode==="ai" ? "Play again" : "Ready for next round";
     show("endModal",true);
     if(won){ sfx.win(); confetti(); } else sfx.lose();
   },1400);
 }
 function resetForNewGame(){
   me.reset(); enemy=grid2d(0); enemySunk=new Set(); enemyShips=[]; logLines=[]; $("log").innerHTML=""; $("log").hidden=true;
-  selected=0; horiz=true; locked=false; iReady=false; theyReady=false; myTurn=false; lastFx=null;
+  selected=0; horiz=true; locked=false; iReady=false; theyReady=false; myTurn=false; lastFx=null; qLock=false; qState=""; closeQModal();
   if(mode==="ai") ai=newAI();
   show("endModal",false); setPhase("setup"); renderAll(); refreshStatus();
 }
-$("btnAgain").onclick=()=>{ if(mode!=="ai") send({t:"rematch"}); resetForNewGame(); };
+$("btnAgain").onclick=()=>{
+  if(mode==="ai"){ resetForNewGame(); return; }
+  sendScreen({type:"again"});
+  $("btnAgain").disabled=true; $("btnAgain").textContent="Waiting for the next round…";
+};
 $("btnViewBoards").onclick=()=>show("endModal",false);
 $("btnMenu").onclick=()=>leave();
 
@@ -794,19 +932,37 @@ function aiShoot(){
   handle({t:"shot",r,c});
 }
 
-/* ================= Networking (Ably) ================= */
+/* ================= Networking (Ably) =================
+   Roles in one room:
+   - screen : the classroom computer. Runs the lobby, starts rounds, keeps the live scoreboard.
+   - player : a Chromebook. Joins with a code + name. Plays directly against the other player.
+   - viewer : an extra screen (e.g. another school) that only watches.
+   Ship positions never leave a player's device until a round ends; the screen only sees shots and results. */
 const AUTH_URL = "https://sink-the-fleet-auth.ufukkorkmaz.workers.dev/token";
 const CODE_CHARS="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const genCode=()=>Array.from({length:5},()=>CODE_CHARS[Math.floor(Math.random()*CODE_CHARS.length)]).join("");
 const validCode=c=>/^[A-HJ-NP-Z2-9]{5}$/.test(c);
+const esc=s=>String(s).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+const cleanName=s=>String(s||"").replace(/[\u0000-\u001f<>&"'`\\\/]/g,"").replace(/\s+/g," ").trim().slice(0,12);
+function getPlayerId(){
+  try{ let v=sessionStorage.getItem("stf-player-id"); if(!v){ v=crypto.randomUUID(); sessionStorage.setItem("stf-player-id",v); } return v; }
+  catch(e){ return crypto.randomUUID(); }
+}
 let sessionNumber=0;
-function clearJoinTimer(){clearTimeout(joinTimer);joinTimer=null;}
+function clearJoinTimer(){ clearTimeout(joinTimer); joinTimer=null; }
+function stopTimers(){
+  [hbTimer,scrPub,scrTick,retryTimer,viewTimer,qBarTimer].forEach(t=>clearInterval(t));
+  hbTimer=scrPub=scrTick=retryTimer=viewTimer=qBarTimer=null;
+  clearQTimers();
+}
 function failNetwork(reason){
   console.error("Ably connection:",reason);
-  if(phase==="menu") {const msg=String(reason);cancelHost();menuMsg(msg);}
-  else {setStatus("Connection lost. Check your internet and rejoin.","them");}
+  const msg=String(reason);
+  if(phase==="menu"){ teardown(); menuMsg(msg); }
+  else if(mode==="screen"||mode==="viewer"){ scrNote(msg); }
+  else setStatus("Connection lost. Check your internet and rejoin.","them");
 }
-async function connectRoom(room,role){
+async function connectRoom(room,onMsg){
   if(typeof Ably==="undefined") throw Error("Ably library failed to load. Check the school internet filter.");
   const thisSession=++sessionNumber;
   const r=new Ably.Realtime({
@@ -823,9 +979,16 @@ async function connectRoom(room,role){
   realtime=r;
   r.connection.on(state=>{
     if(thisSession!==sessionNumber) return;
+    const watching=(mode==="screen"||mode==="viewer");
     if(state.current==="failed") failNetwork("Ably connection failed: "+(state.reason?.message||"unknown error"));
-    if(state.current==="suspended" && phase!=="menu") setStatus("Connection interrupted. Reconnecting…","them");
-    if(state.current==="connected" && phase==="battle") refreshStatus();
+    if((state.current==="suspended"||state.current==="disconnected") && phase!=="menu"){
+      if(watching) scrNote("Connection interrupted. Reconnecting…");
+      else setStatus("Connection interrupted. Reconnecting…","them");
+    }
+    if(state.current==="connected"){
+      if(watching && phase==="screen"){ scrNote(""); if(mode==="screen") pubState(); }
+      if(phase==="battle") refreshStatus();
+    }
   });
   const connected=new Promise((resolve,reject)=>{
     const timer=setTimeout(()=>reject(Error("Cannot connect to Ably (20 seconds). Check whether school Wi-Fi allows Ably.")),20000);
@@ -837,84 +1000,626 @@ async function connectRoom(room,role){
   if(thisSession!==sessionNumber) return;
   const ch=channel=r.channels.get("sinkfleet:"+room);
   await ch.subscribe("game",message=>{
-    const payload=message.data;
-    if(!payload || payload.sender===playerId) return;
-    if(payload.type==="join" && role==="host"){
-      if(opponentId && opponentId!==payload.sender) return;
-      opponentId=payload.sender;
-      if(!joined){ joined=true;startGame(); }
-      ch.publish("game",{sender:playerId,target:opponentId,type:"accept"}).catch(console.error);
-      return;
-    }
-    if(payload.type==="accept" && role==="guest" && payload.target===playerId){
-      opponentId=payload.sender;
-      if(!joined){joined=true;clearJoinTimer();startGame();}
-      return;
-    }
-    if(payload.body && joined && payload.sender===opponentId && payload.target===playerId) handle(payload.body);
+    const p=message.data;
+    if(!p || typeof p!=="object" || p.sender===playerId) return;
+    try{ onMsg(p); }catch(e){ console.error("message handler",e); }
   });
   return ch;
 }
-function cancelHost(){
-  ++sessionNumber;clearJoinTimer();
-  const r=realtime;realtime=null;channel=null;opponentId=null;joined=false;
-  if(r) r.close();
-  mode=null;show("menuHost",false);show("menuMain",true);
+function teardown(){
+  ++sessionNumber; clearJoinTimer(); stopTimers();
+  const r=realtime, ch=channel;
+  if(r){
+    try{
+      if(mode==="player" && ch && joined && r.connection.state==="connected")
+        ch.publish("game",{type:"bye",sender:playerId,target:screenId}).catch(()=>{});
+    }catch(e){}
+    setTimeout(()=>{ try{r.close();}catch(e){} },mode==="player"?250:0);
+  }
+  realtime=null; channel=null; opponentId=null; opponentName=""; joined=false;
+  screenId=null; lastState=null; mySlot=-1; mode=null;
 }
-async function createGame(){
-  cancelHost();mode="host";code=genCode();playerId=crypto.randomUUID();menuMsg("Connecting to Ably…");
-  try{
-    await connectRoom(code,"host");
-    if(mode!=="host") return;
-    $("codeBox").innerHTML=code.split("").map(ch=>`<span>${ch}</span>`).join("");
-    show("menuMain",false);show("menuHost",true);menuMsg("");
-  }catch(e){failNetwork(e.message);}
+const sendScreen=obj=>{
+  if(channel && realtime && realtime.connection.state==="connected" && screenId)
+    channel.publish("game",Object.assign({sender:playerId,target:screenId},obj)).catch(console.error);
+};
+function cleanShip(sh){
+  if(!sh||typeof sh.name!=="string"||!Array.isArray(sh.cells)) return null;
+  const f=FLEET.find(x=>x.name===sh.name); if(!f||sh.cells.length!==f.len) return null;
+  const cells=[];
+  for(const q of sh.cells){
+    if(!Array.isArray(q)||!Number.isInteger(q[0])||!Number.isInteger(q[1])||q[0]<0||q[1]<0||q[0]>=SIZE||q[1]>=SIZE) return null;
+    cells.push([q[0],q[1]]);
+  }
+  return {name:sh.name,cells};
 }
-async function joinGame(){
-  const c=$("codeIn").value.trim().toUpperCase();
-  if(!validCode(c)){menuMsg("Please enter a valid five-character room code.");return;}
-  cancelHost();mode="guest";code=c;playerId=crypto.randomUUID();menuMsg("Connecting to Ably…");
+
+/* ---------- PLAYER (Chromebook) ---------- */
+async function joinPlayer(){
+  const c=$("codeIn").value.trim().toUpperCase(), name=cleanName($("nameIn").value);
+  if(!name){ menuMsg("Please type your name first."); $("nameIn").focus(); return; }
+  if(!validCode(c)){ menuMsg("Please enter a valid five-character room code."); return; }
+  teardown(); mode="player"; code=c; myName=name; playerId=getPlayerId(); menuMsg("Connecting to Ably…");
   try{
-    const ch=await connectRoom(code,"guest");
-    if(mode!=="guest" || !ch) return;
-    menuMsg("Finding host…");
-    const requestJoin=()=>ch.publish("game",{type:"join",sender:playerId}).catch(console.error);
+    const ch=await connectRoom(c,playerHandler);
+    if(mode!=="player" || !ch) return;
+    menuMsg("Finding the classroom screen…");
+    const requestJoin=()=>ch.publish("game",{type:"join",sender:playerId,name:myName}).catch(console.error);
     await requestJoin();
-    clearJoinTimer();
-    // Retransmit while waiting in case the host has not subscribed yet.
-    const retry=setInterval(()=>{if(mode!=="guest" || joined){clearInterval(retry);return;}requestJoin();},2500);
-    joinTimer=setTimeout(()=>{clearInterval(retry);if(phase==="menu" && !joined) failNetwork("No host responded to this room code. Check the code and try again.");},18000);
-  }catch(e){failNetwork(e.message);}
+    // Retransmit while waiting, in case the screen has not subscribed yet.
+    retryTimer=setInterval(()=>{ if(mode!=="player"||joined){ clearInterval(retryTimer); retryTimer=null; return; } requestJoin(); },2500);
+    joinTimer=setTimeout(()=>{ clearInterval(retryTimer); if(phase==="menu" && !joined) failNetwork("No classroom screen answered this code. Check the code and try again."); },18000);
+  }catch(e){ failNetwork(e.message); }
 }
+function playerHandler(p){
+  if(p.type==="accept" && p.target===playerId){
+    screenId=p.sender; mySlot=p.slot; lastStateAt=Date.now();
+    if(!joined){ joined=true; clearJoinTimer(); clearInterval(retryTimer); startGame(); startHeartbeat(); }
+    return;
+  }
+  if(p.type==="full" && p.target===playerId){
+    if(!joined) failNetwork("This room already has two players. Ask your teacher for a new code.");
+    return;
+  }
+  if(!joined) return;
+  if(p.type==="state"){ onPlayerState(p); return; }
+  if(p.type==="start" && p.sender===screenId){ if(phase==="setup" && locked) startBattle(p.firstId===playerId); return; }
+  if(p.type==="newround" && p.sender===screenId){ if(phase!=="menu") resetForNewGame(); return; }
+  if(p.type==="question" && p.sender===screenId){ onQuestion(p); return; }
+  if(p.type==="qresult" && p.sender===screenId){ onQResult(p); return; }
+  if(p.type==="go" && p.target===playerId && p.sender===screenId){
+    qLock=false; qState=""; closeQModal();
+    if(phase==="battle"){ renderFoe(); refreshStatus(); }
+    return;
+  }
+  if(p.type==="cross" && p.target===playerId && p.sender===screenId){ closeQModal(); applyCross(p.cells); return; }
+  if(p.body && p.sender===opponentId && p.target===playerId) handle(p.body);
+}
+function onPlayerState(st){
+  screenId=st.sender; lastState=st; lastStateAt=Date.now();
+  const mine=st.players.find(x=>x&&x.id===playerId), opp=st.players.find(x=>x&&x.id!==playerId);
+  const prev=opponentId;
+  opponentId=opp?opp.id:null; opponentName=opp?opp.name:"";
+  if(!mine) sendScreen({type:"join",name:myName});          // the screen forgot us (e.g. it was refreshed): register again
+  if(prev && !opponentId && phase!=="menu"){
+    if(phase==="battle"||phase==="over"){ resetForNewGame(); show("endModal",false); show("leftModal",true); }
+    else addLog("Your opponent left the room.");
+  }
+  if(!prev && opponentId && phase==="setup") addLog(esc(opponentName)+" joined the room.");
+  updateTitles();
+  if(phase==="setup"||phase==="battle") refreshStatus();
+}
+function startHeartbeat(){
+  clearInterval(hbTimer);
+  hbTimer=setInterval(()=>{
+    sendScreen({type:"hb",name:myName,ready:locked&&phase==="setup"});
+    const off=Date.now()-lastStateAt>15000;
+    $("roomChip").textContent="ROOM "+code+(off?" · screen offline":"");
+    if(off && qLock){ qLock=false; closeQModal(); if(phase==="battle"){ renderFoe(); refreshStatus(); } }   // screen gone: do not block the game
+  },4000);
+}
+function updateTitles(){
+  const p=(mode==="player");
+  $("foeTitle").textContent=(p&&opponentName)?"🎯 Enemy waters — "+opponentName:"🎯 Enemy waters";
+  $("meTitle").textContent=(p&&myName)?"🚢 Your fleet — "+myName:"🚢 Your fleet";
+}
+function scoreLine(){
+  if(mode!=="player"||!lastState) return "";
+  const a=lastState.players.find(x=>x&&x.id===playerId), b=lastState.players.find(x=>x&&x.id!==playerId);
+  if(!a||!b) return "";
+  return "  Score: you "+a.wins+" – "+b.wins+" "+b.name;
+}
+
+/* ---------- CLASSROOM SCREEN (host) ---------- */
+function initScreenState(){
+  S={phase:"lobby",round:1,players:[null,null],turn:null,winner:null,feed:[],
+     boards:[grid2d(0),grid2d(0)],revealed:[[],[]],ev:{n:0,kind:""},last:null,history:[null,null],
+     qMode:"from2",deck:[],q:null,qn:0,cross:null,crossFx:null};
+}
+const blankStats=()=>({shots:0,hits:0,sunk:0,lost:0,qok:0,qn:0});
+function newPlayer(id,name,slot){
+  const h=S.history[slot];
+  const wins=(h&&h.name.toLowerCase()===name.toLowerCase())?h.wins:0;   // same student rejoining keeps their wins
+  return Object.assign({id,name,wins,ready:false,again:false,lastSeen:Date.now(),online:true},blankStats());
+}
+function feedAdd(text,kind){ S.feed.push({t:text,k:kind||""}); if(S.feed.length>12) S.feed.shift(); }
+function snapshot(){
+  const q=S.q&&{id:S.q.id,text:S.q.text,options:S.q.options,forId:S.q.forId,state:S.q.state,picked:S.q.picked,
+    correct:S.q.state==="asking"?-1:S.q.correct,seconds:S.q.seconds,left:Math.max(0,S.q.deadline-Date.now())};
+  return {phase:S.phase,round:S.round,turn:S.turn,winner:S.winner,ev:S.ev,last:S.last,feed:S.feed.slice(-8),
+    q:q||null,cross:S.crossFx,qMode:S.qMode,
+    players:S.players.map(p=>p&&{id:p.id,name:p.name,wins:p.wins,ready:p.ready,again:p.again,shots:p.shots,hits:p.hits,sunk:p.sunk,lost:p.lost,qok:p.qok,qn:p.qn,online:p.online}),
+    boards:S.boards.map(b=>b.map(r=>r.join("")).join("")),
+    revealed:S.revealed};
+}
+function pubState(){
+  if(!S) return;
+  const snap=snapshot();
+  if(channel && realtime && realtime.connection.state==="connected")
+    channel.publish("game",Object.assign({type:"state",sender:playerId},snap)).catch(console.error);
+  renderScreen(snap);
+}
+async function createScreen(){
+  teardown(); mode="screen"; playerId=crypto.randomUUID(); menuMsg("Connecting to Ably…"); initScreenState();
+  try{
+    for(let attempt=0;attempt<6;attempt++){
+      code=genCode(); collision=false;
+      const ch=await connectRoom(code,screenHandler);
+      if(mode!=="screen" || !ch) return;
+      // Probe: if another screen already runs this code it answers with its state.
+      await ch.publish("game",{type:"probe",sender:playerId});
+      await new Promise(res=>setTimeout(res,1800));
+      if(mode!=="screen") return;
+      if(!collision) break;
+      if(attempt===5) throw Error("Could not find a free room code. Please try again.");
+      const old=realtime; realtime=null; channel=null; ++sessionNumber; try{old.close();}catch(e){}
+    }
+    startScreenView();
+  }catch(e){ failNetwork(e.message); }
+}
+function screenHandler(p){
+  if(p.type==="state"){ collision=true; return; }
+  if(p.type==="probe"||p.type==="watch"){ if(phase==="screen") pubState(); return; }
+  if(phase!=="screen"||!S) return;
+  const idx=S.players.findIndex(x=>x&&x.id===p.sender);
+  if(idx>=0){ S.players[idx].lastSeen=Date.now(); S.players[idx].online=true; }
+  switch(p.type){
+    case "join": screenJoin(p); return;
+    case "ready": if(idx>=0 && S.phase==="setup"){ S.players[idx].ready=true; maybeStart(); pubState(); } return;
+    case "again": if(idx>=0 && S.phase==="over"){ S.players[idx].again=true; if(S.players.every(x=>x&&x.again)) newRound(false); else pubState(); } return;
+    case "hb":
+      if(idx<0) adopt(p);
+      else if(p.ready && S.phase==="setup" && !S.players[idx].ready){ S.players[idx].ready=true; maybeStart(); pubState(); }
+      return;
+    case "answer":
+      if(idx>=0 && S.q && S.q.state==="asking" && p.sender===S.q.forId && p.qid===S.q.id && Number.isInteger(p.choice) && p.choice>=0 && p.choice<S.q.options.length)
+        gradeQuestion(p.choice===S.q.correct,p.choice,false);
+      return;
+    case "bye": if(idx>=0) removePlayer(idx); return;
+  }
+  if(p.body && idx>=0) onBody(idx,p.body);
+}
+const ack=(id,slot)=>channel.publish("game",{type:"accept",sender:playerId,target:id,slot}).catch(console.error);
+function screenJoin(p){
+  const name=cleanName(p.name)||"Player";
+  let idx=S.players.findIndex(x=>x&&x.id===p.sender);
+  if(idx>=0){
+    S.players[idx].name=name;
+    if(S.phase==="battle"||S.phase==="over"){ ack(p.sender,idx); newRound(true); return; }   // a device refreshed mid-round: start the round again
+  }else{
+    idx=S.players.findIndex(x=>!x);
+    if(idx<0){ channel.publish("game",{type:"full",sender:playerId,target:p.sender}).catch(console.error); return; }
+    S.players[idx]=newPlayer(p.sender,name,idx);
+    feedAdd(name+" joined the room","");
+    if(S.players[0]&&S.players[1]&&S.phase==="lobby") S.phase="setup";
+  }
+  ack(p.sender,idx);
+  pubState();
+}
+function adopt(p){            // a player whose heartbeat we do not know (screen was refreshed, or player timed out and came back)
+  const name=cleanName(p.name); if(!name) return;
+  const free=S.players.findIndex(x=>!x); if(free<0) return;
+  S.players[free]=newPlayer(p.sender,name,free);
+  if(p.ready) S.players[free].ready=true;
+  if(S.players[0]&&S.players[1]&&S.phase==="lobby") S.phase="setup";
+  feedAdd(name+" is back","");
+  maybeStart(); pubState();
+}
+function maybeStart(){
+  if(S.phase!=="setup") return;
+  const a=S.players[0], b=S.players[1];
+  if(!a||!b||!a.ready||!b.ready) return;
+  const first=Math.random()<.5?a:b;
+  S.phase="battle"; S.turn=first.id;
+  feedAdd("Battle begins! "+first.name+" shoots first.","");
+  channel.publish("game",{type:"start",sender:playerId,firstId:first.id}).catch(console.error);
+  beginTurn(first.id);
+}
+function resetRoundState(){
+  clearQTimers(); S.q=null; S.cross=null;
+  S.boards=[grid2d(0),grid2d(0)]; S.revealed=[[],[]]; S.turn=null; S.winner=null; S.last=null;
+  S.players.forEach(p=>{ if(p) Object.assign(p,{ready:false,again:false},blankStats()); });
+}
+function newRound(abort){
+  if(!abort && S.phase==="over") S.round++;
+  resetRoundState();
+  S.phase=(S.players[0]&&S.players[1])?"setup":"lobby";
+  feedAdd("Round "+S.round+" — place your ships!","");
+  channel.publish("game",{type:"newround",sender:playerId}).catch(console.error);
+  pubState();
+}
+function removePlayer(idx){
+  const pl=S.players[idx]; if(!pl) return;
+  S.history[idx]={name:pl.name,wins:pl.wins};
+  S.players[idx]=null;
+  feedAdd(pl.name+" left the room","");
+  if(S.phase==="battle"||S.phase==="over") resetRoundState();   // the remaining player's device resets itself
+  S.phase="lobby";
+  pubState();
+}
+function onBody(slot,b){
+  if(!b||typeof b!=="object") return;
+  if(S.phase==="setup" && S.players[0] && S.players[1] && (b.t==="shot"||b.t==="result")) S.phase="battle";   // screen joined late
+  if(b.t==="reveal" && S.phase==="over"){
+    if(Array.isArray(b.ships)) S.revealed[slot]=b.ships.map(cleanShip).filter(Boolean);
+    pubState(); return;
+  }
+  if(S.phase!=="battle" || b.t!=="result") return;
+  const r=b.r, c=b.c;
+  if(!(Number.isInteger(r)&&Number.isInteger(c)&&r>=0&&c>=0&&r<SIZE&&c<SIZE)) return;
+  const df=S.players[slot], sh=S.players[1-slot];             // the defender reports the result of the other player's shot
+  if(!df||!sh||S.boards[slot][r][c]!==0) return;
+  const auto=(b.auto===true);                                 // auto = the computer's cross shot after a wrong answer
+  if(!auto) sh.shots++;
+  S.boards[slot][r][c]=b.hit?2:1;
+  if(b.hit&&!auto) sh.hits++;
+  S.last={s:slot,r,c,hit:!!b.hit};
+  let kind=b.hit?"hit":"miss", text=null;
+  const sunk=cleanShip(b.sunk), by=auto?"The computer":sh.name;
+  if(sunk){
+    sunk.cells.forEach(([rr,cc])=>S.boards[slot][rr][cc]=3);
+    sh.sunk++; df.lost++; S.revealed[slot].push(sunk);
+    kind="sunk"; text=by+" sank "+df.name+"'s "+sunk.name+"!";
+  }else if(b.hit) text=by+" hit "+df.name+"'s ship at "+coord(r,c);
+  else if(!auto) text=sh.name+" missed at "+coord(r,c);
+  if(text) feedAdd(text,kind);
+  S.ev={n:S.ev.n+1,kind};
+  if(auto && S.cross){ S.cross.pending--; if(S.cross.pending<=0) setTimeout(finishCross,1400); }
+  if(b.win===true){
+    clearQTimers(); S.q=null; S.cross=null;
+    S.phase="over"; S.winner=sh.id; sh.wins++; S.turn=null;
+    if(Array.isArray(b.reveal)) S.revealed[slot]=b.reveal.map(cleanShip).filter(Boolean);
+    feedAdd(sh.name+" wins round "+S.round+"!","sunk");
+    S.ev={n:S.ev.n+1,kind:"win"};
+    pubState();
+  }else if(auto) pubState();
+  else beginTurn(df.id);                                      // the defender is next: maybe a question first
+}
+
+/* ---------- Questions (host) ---------- */
+function clearQTimers(){ clearTimeout(qTimeout); clearTimeout(qNext); clearTimeout(crossTimer); qTimeout=qNext=crossTimer=null; }
+function nextQuestion(){
+  if(!S.deck.length){
+    S.deck=QUESTIONS.map((_,i)=>i);
+    for(let i=S.deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [S.deck[i],S.deck[j]]=[S.deck[j],S.deck[i]]; }
+  }
+  return QUESTIONS[S.deck.pop()];
+}
+function needQuestion(pl){
+  if(!QUESTIONS.length || S.qMode==="off") return false;
+  return pl.shots >= (S.qMode==="from2"?1:0);            // from2: a team's first turn is free
+}
+function beginTurn(id){
+  clearQTimers();
+  const pl=S.players.find(x=>x&&x.id===id);
+  if(!pl||S.phase!=="battle") return;
+  S.turn=id; S.q=null;
+  if(!needQuestion(pl)){
+    channel.publish("game",{type:"go",sender:playerId,target:id}).catch(console.error);
+    pubState(); return;
+  }
+  const q=nextQuestion();
+  S.qn++; pl.qn++;
+  S.q={id:S.qn,text:q.q,options:q.o.slice(0,4),correct:q.a,forId:id,state:"asking",picked:-1,seconds:QUESTION_SECONDS,deadline:Date.now()+QUESTION_SECONDS*1000};
+  channel.publish("game",{type:"question",sender:playerId,forId:id,qid:S.q.id,text:S.q.text,options:S.q.options,seconds:QUESTION_SECONDS}).catch(console.error);
+  qTimeout=setTimeout(()=>gradeQuestion(false,-1,true),QUESTION_SECONDS*1000+600);
+  pubState();
+}
+function gradeQuestion(ok,picked,timeout){
+  if(!S||!S.q||S.q.state!=="asking") return;
+  clearTimeout(qTimeout);
+  const pl=S.players.find(x=>x&&x.id===S.q.forId); if(!pl) return;
+  S.q.state=ok?"correct":(timeout?"timeout":"wrong"); S.q.picked=picked;
+  if(ok) pl.qok++;
+  feedAdd(pl.name+(ok?" answered correctly ✓":(timeout?" ran out of time ✗":" answered wrong ✗")),ok?"":"hit");
+  S.ev={n:S.ev.n+1,kind:ok?"qok":"qbad"};
+  channel.publish("game",{type:"qresult",sender:playerId,forId:pl.id,ok,picked,correct:S.q.correct,timeout:!!timeout}).catch(console.error);
+  pubState();
+  qNext=setTimeout(()=>{
+    if(!S||S.phase!=="battle"||!S.q) return;
+    if(ok){ S.q=null; channel.publish("game",{type:"go",sender:playerId,target:pl.id}).catch(console.error); pubState(); }
+    else fireCross(pl);
+  },2800);
+}
+function fireCross(pl){
+  const slot=S.players.findIndex(x=>x&&x.id===pl.id), other=S.players[1-slot];
+  S.q=null;
+  if(!other){ pubState(); return; }
+  const free=[]; for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++) if(S.boards[slot][r][c]===0) free.push([r,c]);
+  if(!free.length){ beginTurn(other.id); return; }
+  const [cr,cc]=free[Math.floor(Math.random()*free.length)];
+  const cells=[[cr,cc],[cr-1,cc],[cr+1,cc],[cr,cc-1],[cr,cc+1]].filter(([r,c])=>r>=0&&c>=0&&r<SIZE&&c<SIZE&&S.boards[slot][r][c]===0);
+  S.cross={pending:cells.length,otherId:other.id};
+  S.crossFx={n:(S.crossFx?S.crossFx.n:0)+1,s:slot,cells};
+  feedAdd("💥 The computer fires a cross-shaped shot at "+pl.name+"'s fleet!","sunk");
+  channel.publish("game",{type:"cross",sender:playerId,target:pl.id,cells}).catch(console.error);
+  crossTimer=setTimeout(finishCross,4000);                    // safety net if a result is lost
+  pubState();
+}
+function finishCross(){
+  clearTimeout(crossTimer);
+  if(!S||S.phase!=="battle"||!S.cross) return;
+  const other=S.cross.otherId; S.cross=null;
+  beginTurn(other);                                           // the team that answered wrong lost its shot: the other team is next
+}
+
+function screenTickFn(){
+  if(!S||phase!=="screen") return;
+  const now=Date.now(); let changed=false;
+  S.players.forEach((p,i)=>{
+    if(!p) return;
+    if(now-p.lastSeen>45000){ removePlayer(i); }
+    else if(now-p.lastSeen>15000 && p.online){ p.online=false; changed=true; }
+  });
+  if(changed) pubState();
+}
+function startScreenView(){
+  show("menu",false); show("game",false); show("screenView",true); menuMsg("");
+  phase="screen"; muted=true; $("btnScrMute").textContent="🔇";
+  $("scrRoom").textContent="ROOM "+code;
+  $("btnNext").hidden=false; $("btnScrCopy").hidden=false;
+  scrLastEv=-1; scrNoteText=""; lastRendered=null; scrLastCross=0; scrQKey="";
+  $("qMode").hidden=false; $("qMode").value=S.qMode; if(!QUESTIONS.length) $("qMode").value="off";
+  qBarTimer=setInterval(updateQBar,200);
+  pubState();
+  scrPub=setInterval(pubState,3000);
+  scrTick=setInterval(screenTickFn,2000);
+}
+
+/* ---------- VIEWER (extra screen) ---------- */
+async function watchRoom(){
+  const c=$("codeIn").value.trim().toUpperCase();
+  if(!validCode(c)){ menuMsg("Please enter a valid five-character room code."); return; }
+  teardown(); mode="viewer"; code=c; playerId=crypto.randomUUID(); menuMsg("Connecting to Ably…");
+  try{
+    const ch=await connectRoom(c,viewerHandler);
+    if(mode!=="viewer" || !ch) return;
+    menuMsg("Finding the classroom screen…");
+    const ask=()=>ch.publish("game",{type:"watch",sender:playerId}).catch(console.error);
+    await ask();
+    retryTimer=setInterval(()=>{ if(mode!=="viewer"||phase==="screen"){ clearInterval(retryTimer); retryTimer=null; return; } ask(); },2500);
+    joinTimer=setTimeout(()=>{ clearInterval(retryTimer); if(phase==="menu") failNetwork("No classroom screen answered this code. Check the code and try again."); },18000);
+  }catch(e){ failNetwork(e.message); }
+}
+function viewerHandler(p){
+  if(p.type!=="state") return;
+  lastStateAt=Date.now(); screenId=p.sender;
+  if(phase==="menu"){ clearJoinTimer(); startViewerView(); }
+  scrNoteText="";
+  renderScreen(p);
+}
+function startViewerView(){
+  show("menu",false); show("game",false); show("screenView",true); menuMsg("");
+  phase="screen"; muted=true; $("btnScrMute").textContent="🔇";
+  $("scrRoom").textContent="WATCHING ROOM "+code;
+  $("btnNext").hidden=true; $("btnScrCopy").hidden=true; $("qMode").hidden=true;
+  scrLastEv=-1; scrNoteText=""; lastRendered=null; scrLastCross=0; scrQKey="";
+  qBarTimer=setInterval(updateQBar,200);
+  viewTimer=setInterval(()=>{ if(Date.now()-lastStateAt>12000) scrNote("Waiting for the classroom screen…"); },4000);
+}
+
+/* ---------- Questions (player device) ---------- */
+function onQuestion(p){
+  qState=(p.forId===playerId)?"mine":"theirs"; qCur=p.qid;
+  if(qState==="mine") openQModal(p); else closeQModal();
+  if(phase==="battle") refreshStatus();
+}
+function openQModal(p){
+  $("qText").textContent=String(p.text||"");
+  const box=$("qOpts"); box.innerHTML="";
+  (p.options||[]).slice(0,4).forEach((t,i)=>{
+    const b=document.createElement("button"); b.className="btn qopt";
+    b.innerHTML='<b>'+"ABCD"[i]+'</b><span></span>'; b.querySelector("span").textContent=String(t);
+    b.onclick=()=>answerQ(i); box.appendChild(b);
+  });
+  $("qNote").textContent="Choose the answer. The question is on the big screen too.";
+  qTotal=p.seconds||30; qEnd=Date.now()+qTotal*1000; $("qBar").style.width="100%";
+  show("qModal",true);
+  clearInterval(qTick);
+  qTick=setInterval(()=>{
+    const left=Math.max(0,qEnd-Date.now());
+    $("qBar").style.width=(left/(qTotal*1000)*100)+"%";
+    if(left<=0){ clearInterval(qTick); [...box.children].forEach(b=>b.disabled=true); $("qNote").textContent="⏰ Time's up!"; }
+  },200);
+}
+function answerQ(i){
+  const kids=[...$("qOpts").children]; kids.forEach(b=>b.disabled=true); kids[i].classList.add("picked");
+  clearInterval(qTick);
+  $("qNote").textContent="Answer sent… look at the big screen!";
+  sendScreen({type:"answer",qid:qCur,choice:i});
+}
+function onQResult(p){
+  if(p.forId!==playerId||$("qModal").hidden) return;
+  clearInterval(qTick);
+  [...$("qOpts").children].forEach((b,i)=>{ b.disabled=true; if(i===p.correct) b.classList.add("right"); else if(i===p.picked) b.classList.add("wrong"); });
+  $("qNote").textContent=p.ok?"✅ Correct! Get ready to fire.":((p.timeout?"⏰ Time's up! ":"❌ Wrong answer. ")+"The computer will fire a cross-shaped shot at your fleet!");
+}
+function closeQModal(){ clearInterval(qTick); qTick=null; show("qModal",false); }
+function applyCross(cells){
+  if(phase!=="battle"||!Array.isArray(cells)) return;
+  myTurn=false; qLock=false; qState="";
+  const done=[]; let win=false;
+  for(const q of cells){
+    if(!Array.isArray(q)) continue;
+    const r=q[0], c=q[1];
+    if(!(Number.isInteger(r)&&Number.isInteger(c)&&r>=0&&c>=0&&r<SIZE&&c<SIZE)||me.shots[r][c]!==0) continue;
+    const res=me.receiveShot(r,c); done.push([r,c,res]);
+    if(res.win){ win=true; break; }
+  }
+  let sunkAny=false, hitAny=false;
+  done.forEach(([r,c,res])=>{
+    if(res.sunk) sunkAny=true; if(res.hit) hitAny=true;
+    send({t:"result",r,c,hit:res.hit,sunk:res.sunk?{name:res.ship.name,cells:res.ship.cells}:null,win:res.win,reveal:res.win?me.shipData():null,auto:true});
+  });
+  if(done.length) lastFx=["me",done[0][0],done[0][1]];
+  if(sunkAny) sfx.sunk(); else if(hitAny) sfx.hit(); else sfx.splash();
+  addLog("The computer fired a cross-shaped shot at your fleet! 💥"+(sunkAny?" A ship sank!":hitAny?" "+done.filter(d=>d[2].hit).length+" hit(s)!":""),hitAny?"hitl":"");
+  renderAll();
+  if(win) endGame(false); else refreshStatus();
+}
+
+/* ---------- Scoreboard drawing (host and viewers) ---------- */
+function scrNote(t){
+  scrNoteText=t||"";
+  if(lastRendered) renderScreen(lastRendered); else $("scrStatus").textContent=scrNoteText;
+}
+function isSunk(st,i,name){
+  const sh=(st.revealed[i]||[]).find(x=>x.name===name); if(!sh) return false;
+  const bs=st.boards[i]; return sh.cells.every(([r,c])=>+bs[r*SIZE+c]===3);
+}
+function renderScreen(st){
+  lastRendered=st;
+  const P=st.players;
+  let text="", cls="";
+  if(scrNoteText){ text=scrNoteText; cls="them"; }
+  else if(st.phase==="lobby") text=(P[0]||P[1])?"Waiting for one more player…":"Waiting for players to join…";
+  else if(st.phase==="setup") text="Both players are placing their ships…";
+  else if(st.phase==="battle"){ const t=P.find(x=>x&&x.id===st.turn); text=t?(t.name+(st.q?" is answering a question…":" is aiming…")):"Battle in progress"; cls="you"; }
+  else { const w=P.find(x=>x&&x.id===st.winner); text="🏆 "+(w?w.name:"Someone")+" wins round "+st.round+"!"; cls="you"; }
+  const sEl=$("scrStatus"); sEl.textContent=text; sEl.className="glass status "+cls;
+  $("btnNext").disabled=!(mode==="screen" && (st.phase==="over"||st.phase==="battle"));
+  const newEv=(scrLastEv!==-1 && st.ev.n!==scrLastEv);
+  if(newEv && !muted){
+    const k=st.ev.kind;
+    if(k==="sunk") sfx.sunk(); else if(k==="hit") sfx.hit(); else if(k==="miss") sfx.splash(); else if(k==="win"||k==="qok") sfx.win(); else if(k==="qbad") sfx.lose();
+  }
+  scrLastEv=st.ev.n;
+  renderPlayerCard(0,st,newEv); renderPlayerCard(1,st,newEv);
+  if(st.cross) scrLastCross=st.cross.n;
+  renderCenter(st);
+  renderQuestion(st);
+  if(st.phase==="over"){ const key=code+":"+st.round; if(scrConfettiKey!==key){ scrConfettiKey=key; confetti(); } }
+}
+function renderPlayerCard(i,st,newEv){
+  const el=$("pc"+i), p=st.players[i];
+  const active=!!p && st.phase==="battle" && st.turn===p.id;
+  const winner=!!p && st.phase==="over" && st.winner===p.id;
+  el.className="glass panel pcard"+(active?" active":"")+(winner?" winner":"")+(p?"":" empty");
+  let badge;
+  if(!p) badge="Waiting for player…";
+  else if(!p.online) badge="Reconnecting…";
+  else if(st.phase==="lobby"||st.phase==="setup") badge=p.ready?"READY ✓":"Placing ships…";
+  else if(st.phase==="battle") badge=active?"AIMING…":"Waiting";
+  else badge=winner?"WINNER 🏆":"Defeated";
+  const acc=(p&&p.shots)?Math.round(p.hits/p.shots*100):0;
+  const fleet=FLEET.map(f=>`<div class="fship ${isSunk(st,i,f.name)?"dead":""}">${f.name}<span class="pips">${"<i></i>".repeat(f.len)}</span></div>`).join("");
+  el.innerHTML=
+    `<div class="phead"><div class="pname">${p?esc(p.name):"—"}</div><div class="pwins">${p?p.wins:0} 🏆</div></div>`+
+    `<div class="pline"><span class="badge ${active?"on":""}">${badge}</span><span>${p?p.shots:0} shots</span><span>${p?p.hits:0} hits</span><span>${acc}%</span>${(p&&p.qn)?`<span>❓ ${p.qok}/${p.qn}</span>`:""}</div>`+
+    `<div class="grid" title="${p?esc(p.name)+"'s fleet":""}"></div>`+
+    `<div class="fleetrow">${fleet}</div>`;
+  const cells=[]; buildGrid(el.querySelector(".grid"),cells);
+  const bs=st.boards[i]||"0".repeat(100);
+  for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++){
+    const v=+bs[r*SIZE+c], d=cells[r][c];
+    if(v===1) d.classList.add("miss");
+    else if(v===2) d.classList.add("hit");
+    else if(v===3) d.classList.add("hit","sunk");
+  }
+  (st.revealed[i]||[]).forEach(sh=>{
+    sh.cells.forEach(([r,c])=>{ if(+bs[r*SIZE+c]===0) cells[r][c].classList.add("revealed"); });
+    addShipIcon(cells[sh.cells[0][0]][sh.cells[0][1]],sh.name,sh.cells,sh.cells.every(([r,c])=>+bs[r*SIZE+c]===3));
+  });
+  if(st.cross && st.cross.n!==scrLastCross && st.cross.s===i){ st.cross.cells.forEach(([r,c])=>cells[r][c].classList.add("fx","hitfx")); }
+  if(newEv && st.last && st.last.s===i){
+    const d=cells[st.last.r][st.last.c]; d.classList.add("fx"); if(st.last.hit) d.classList.add("hitfx");
+  }
+}
+function renderCenter(st){
+  const P=st.players, el=$("scrCenter");
+  const w0=P[0]?P[0].wins:0, w1=P[1]?P[1].wins:0;
+  const n0=P[0]?esc(P[0].name):"Player 1", n1=P[1]?esc(P[1].name):"Player 2";
+  let mid;
+  if(st.phase==="lobby"||st.phase==="setup"){
+    mid=`<div class="cl">JOIN CODE</div><div class="codebox small">${code.split("").map(ch=>`<span>${ch}</span>`).join("")}</div>`+
+        `<div class="hint">Open the game on your Chromebook, type your name and this code.</div>`;
+  }else if(st.phase==="battle"){
+    const t=P.find(x=>x&&x.id===st.turn);
+    mid=`<div class="turn"><span class="arrow">${t===P[0]?"◀":"▶"}</span>${t?esc(t.name):""}<div class="dots">is aiming</div></div>`;
+  }else{
+    const w=P.find(x=>x&&x.id===st.winner);
+    mid=`<div class="winner">🏆<div>${w?esc(w.name):""}</div><div class="hint">wins round ${st.round}!</div></div>`;
+  }
+  el.innerHTML=`<div class="round">ROUND ${st.round}</div><div class="score"><span>${w0}</span><i>–</i><span>${w1}</span></div>`+
+    `<div class="vs">${n0}<em>vs</em>${n1}</div>${mid}`+
+    `<div class="feed">${st.feed.slice(-6).reverse().map(f=>`<div class="${esc(f.k)}">${esc(f.t)}</div>`).join("")}</div>`;
+}
+
+function updateQBar(){
+  const st=lastRendered; if(!st||!st.q||st.q.state!=="asking") return;
+  const left=Math.max(0,qDeadlineLocal-Date.now());
+  const bar=$("qwBar"), sec=$("qwSec");
+  if(bar) bar.style.width=(left/(st.q.seconds*1000)*100)+"%";
+  if(sec) sec.textContent=Math.ceil(left/1000)+"s";
+}
+function renderQuestion(st){
+  const el=$("scrQ"), q=st.q;
+  if(!q||st.phase!=="battle"){ el.hidden=true; scrQKey=""; return; }
+  el.hidden=false;
+  qDeadlineLocal=Date.now()+q.left;
+  const key=q.id+":"+q.state+":"+q.picked;
+  if(key===scrQKey){ updateQBar(); return; }
+  scrQKey=key;
+  const pl=st.players.find(x=>x&&x.id===q.forId), slot=st.players.indexOf(pl), name=pl?esc(pl.name):"Team";
+  const opts=q.options.map((t,i)=>{
+    let c="qo"; if(q.state!=="asking"){ if(i===q.correct) c+=" right"; else if(i===q.picked) c+=" wrong"; }
+    return `<div class="${c}"><b>${"ABCD"[i]}</b><span>${esc(t)}</span></div>`;
+  }).join("");
+  let verdict="";
+  if(q.state==="correct") verdict=`<div class="verdict ok">✅ Correct! ${name} takes the shot.</div>`;
+  else if(q.state==="wrong") verdict=`<div class="verdict bad">❌ Wrong answer! The computer fires a cross-shaped shot at ${name}'s fleet!</div>`;
+  else if(q.state==="timeout") verdict=`<div class="verdict bad">⏰ Time's up! The computer fires a cross-shaped shot at ${name}'s fleet!</div>`;
+  const teacher=(mode==="screen"&&q.state==="asking")?`<div class="tbtns"><button class="btn small" id="tOk">Teacher: mark correct</button><button class="btn small warn" id="tBad">Teacher: mark wrong</button></div>`:"";
+  el.innerHTML=`<div class="glass qwin"><div class="qhead"><span class="qteam">${slot===0?"◀":"▶"} ${name}</span><span class="qsec" id="qwSec"></span></div>`+
+    `<div class="qbarw"><i id="qwBar"></i></div><div class="qtext">${esc(q.text)}</div><div class="qgrid">${opts}</div>${verdict}${teacher}</div>`;
+  if(teacher){ $("tOk").onclick=()=>gradeQuestion(true,-1,false); $("tBad").onclick=()=>gradeQuestion(false,-1,false); }
+  updateQBar();
+}
+
 /* ================= Flow ================= */
 function startGame(){
-  show("menu",false); show("game",true); show("menuHost",false); show("menuMain",true); menuMsg("");
+  show("menu",false); show("screenView",false); show("game",true); menuMsg("");
+  muted=false; $("btnMute").textContent="🔊";
   $("roomChip").textContent = mode==="ai" ? "PRACTICE MODE" : "ROOM "+code;
   resetForNewGame();
+  updateTitles();
   $("log").hidden=true;
 }
 function leave(){
-  cancelHost();ai=null;code="";
-  show("endModal",false);show("leftModal",false);
-  show("game",false);show("menu",true);show("menuHost",false);show("menuMain",true);
-  phase="menu";menuMsg("");
+  teardown(); ai=null; code=""; S=null; scrNoteText=""; scrLastEv=-1; lastRendered=null; closeQModal(); $("scrQ").hidden=true;
+  show("endModal",false); show("leftModal",false); show("game",false); show("screenView",false); show("menu",true);
+  phase="menu"; menuMsg("");
 }
 
 /* ================= Buttons ================= */
-$("btnCreate").onclick=createGame;
-$("btnCancel").onclick=cancelHost;
-$("btnJoin").onclick=joinGame;
-$("codeIn").addEventListener("keydown",e=>{ if(e.key==="Enter") joinGame(); });
-$("btnAI").onclick=()=>{ mode="ai"; ai=newAI(); startGame(); };
-$("btnCopy").onclick=()=>{
-  const b=$("btnCopy");
-  (navigator.clipboard?navigator.clipboard.writeText(code):Promise.reject()).then(()=>{ b.textContent="Copied!"; setTimeout(()=>b.textContent="Copy code",1500); }).catch(()=>{ b.textContent="Select the code & copy"; });
+$("btnCreate").onclick=createScreen;
+$("btnJoin").onclick=joinPlayer;
+$("btnWatch").onclick=watchRoom;
+$("codeIn").addEventListener("keydown",e=>{ if(e.key==="Enter") joinPlayer(); });
+$("nameIn").addEventListener("keydown",e=>{ if(e.key==="Enter") $("codeIn").focus(); });
+$("btnAI").onclick=()=>{ teardown(); mode="ai"; ai=newAI(); startGame(); };
+function copyCode(b,label){
+  (navigator.clipboard?navigator.clipboard.writeText(code):Promise.reject()).then(()=>{ b.textContent="Copied!"; setTimeout(()=>b.textContent=label,1500); }).catch(()=>{ b.textContent="Select the code & copy"; });
+}
+$("btnScrCopy").onclick=()=>copyCode($("btnScrCopy"),"Copy code");
+$("btnNext").onclick=()=>{
+  if(mode!=="screen"||!S) return;
+  if(S.phase==="battle" && !confirm("End this round and start again?")) return;
+  newRound(S.phase==="battle");
 };
+$("qMode").onchange=()=>{ if(mode!=="screen"||!S) return; S.qMode=$("qMode").value; feedAdd("Questions: "+$("qMode").selectedOptions[0].text.replace("Questions: ",""),""); pubState(); };
+$("btnScrMute").onclick=()=>{ muted=!muted; $("btnScrMute").textContent=muted?"🔇":"🔊"; if(!muted) sfx.place(); };
+$("btnFull").onclick=()=>{
+  try{ if(document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); }catch(e){}
+};
+$("btnScrLeave").onclick=()=>{ if(confirm(mode==="screen"?"Close the classroom screen? The scoreboard will be lost.":"Stop watching this room?")) leave(); };
 $("btnLeave").onclick=()=>{ if(confirm("Leave this game?")) leave(); };
 $("btnLeftOk").onclick=leave;
+$("btnLeftWait").onclick=()=>show("leftModal",false);
 $("btnMute").onclick=()=>{ muted=!muted; $("btnMute").textContent=muted?"🔇":"🔊"; };
 ["btnHelp","btnHelp2"].forEach(id=>$(id).onclick=()=>show("helpModal",true));
 $("btnHelpClose").onclick=()=>show("helpModal",false);
+window.addEventListener("pagehide",()=>{ if(mode==="player"&&joined) sendScreen({type:"bye"}); });
 </script>
 </body>
 </html>

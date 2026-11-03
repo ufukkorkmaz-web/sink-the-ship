@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>StF-Monitoring</title>
+<title>StF Monitoring</title>
 <script src="https://cdn.ably.com/lib/ably.min-2.js" onerror="var s=document.createElement('script');s.src='https://unpkg.com/ably@2/browser/static/ably.min.js';document.head.appendChild(s)"></script>
 <style>
 :root{
@@ -236,6 +236,7 @@ select.btn option{color:#042a3a;background:#e8f4fb}
 .qwin{width:min(1150px,100%);padding:24px 32px;display:flex;flex-direction:column;gap:14px;animation:pop .35s both}
 .qhead{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:clamp(1.1rem,2vw,1.8rem)}
 .qteam{padding:4px 18px;border-radius:999px;background:rgba(94,234,212,.3);border:1px solid var(--accent)}
+.qtopic{font-size:clamp(.9rem,1.4vw,1.3rem);letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700}
 .qsec{font-size:clamp(1.5rem,2.8vw,2.6rem);font-variant-numeric:tabular-nums}
 .qbarw{height:12px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden}
 .qbarw i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#5eead4,#38bdf8);border-radius:99px}
@@ -363,6 +364,13 @@ select.btn option{color:#042a3a;background:#e8f4fb}
           <option value="from1">Questions: every turn</option>
           <option value="off">Questions: off</option>
         </select>
+        <select class="btn small" id="qTime" title="How long do teams get to answer?">
+          <option value="20">Answer time: 20s</option>
+          <option value="30">Answer time: 30s</option>
+          <option value="45">Answer time: 45s</option>
+          <option value="60">Answer time: 60s</option>
+          <option value="0">Answer time: no limit</option>
+        </select>
         <button class="btn small" id="btnNext" disabled>Next round</button>
         <button class="btn small" id="btnScrCopy">Copy code</button>
         <button class="btn small" id="btnScrMute" title="Sound on/off">🔇</button>
@@ -418,7 +426,7 @@ select.btn option{color:#042a3a;background:#e8f4fb}
 <div class="modal" id="qModal" hidden>
   <div class="glass qbox">
     <div class="qbarw"><i id="qBar"></i></div>
-    <div class="qlabel">QUESTION</div>
+    <div class="qlabel" id="qLabel">QUESTION</div>
     <h2 id="qText"></h2>
     <div class="qopts" id="qOpts"></div>
     <p id="qNote"></p>
@@ -437,24 +445,34 @@ const FLEET = [
   {name:"Destroyer",  len:2}
 ];
 /* ================= QUESTION BANK =================
-   Replace these with your own. Format: {q:"question", o:["A","B","C","D"], a:index of the correct option (0=A, 1=B, 2=C, 3=D)} */
+   Format: {t:"topic label", q:"question", o:["A","B","C","D"], a:index of the correct option (0=A, 1=B, 2=C, 3=D)} */
 const QUESTIONS = [
-  {q:"She ___ to school by bus every day.", o:["go","goes","going","gone"], a:1},
-  {q:"I have ___ finished my homework.", o:["yet","already","still","ever"], a:1},
-  {q:"What is the opposite of “generous”?", o:["kind","selfish","brave","polite"], a:1},
-  {q:"If it rains tomorrow, we ___ at home.", o:["will stay","would stay","stayed","staying"], a:0},
-  {q:"A person who writes books is called an ___.", o:["author","actor","editor","artist"], a:0},
-  {q:"He asked me where I ___.", o:["live","lived","am living","lives"], a:1},
-  {q:"Which word means “very tired”?", o:["exhausted","excited","embarrassed","energetic"], a:0},
-  {q:"There aren't ___ apples in the basket.", o:["some","any","much","a"], a:1},
-  {q:"I'm looking forward ___ you next week.", o:["to see","to seeing","seeing","see"], a:1},
-  {q:"The film was so boring that I ___ asleep.", o:["fell","felt","fall","fallen"], a:0},
-  {q:"Which sentence is correct?", o:["He don't like pizza.","He doesn't likes pizza.","He doesn't like pizza.","He not like pizza."], a:2},
-  {q:"“Huge” means the same as ___.", o:["tiny","enormous","narrow","quiet"], a:1},
-  {q:"You ___ wear a seatbelt. It's the law.", o:["must","can","might","may"], a:0},
-  {q:"She is the ___ student in our class.", o:["more tall","most tall","tallest","taller"], a:2}
+  // ---- Depth & Complexity ----
+  {t:"Depth & Complexity", q:"How can recognizing patterns help AI make decisions?",
+   o:["It helps AI understand every situation perfectly.","It helps AI identify similarities and make predictions.","It prevents AI from making mistakes.","It allows AI to think exactly like humans."], a:1},
+  {t:"Depth & Complexity", q:"Why are details important when analyzing information?",
+   o:["They always make information more confusing.","They help us ignore the bigger picture.","They can change how we understand a situation.","They guarantee that our conclusions are correct."], a:2},
+  {t:"Depth & Complexity", q:"Which question best represents the Big Idea icon of Depth & Complexity?",
+   o:["What color is the robot?","How many buttons does the robot have?","When was the robot created?","How does AI change the way humans solve problems?"], a:3},
+  // ---- AI Hallucination ----
+  {t:"AI Hallucination", q:"What is an AI hallucination?",
+   o:["When AI refuses to answer a question.","When AI provides information that sounds convincing but is incorrect or made up.","When AI takes too long to respond.","When AI repeats a correct answer."], a:1},
+  {t:"AI Hallucination", q:"Why might AI sound confident even when its answer is wrong?",
+   o:["AI always knows when it is correct.","AI intentionally tries to trick people.","AI can generate convincing answers without knowing whether they are true.","AI checks every answer against a reliable source."], a:2},
+  {t:"AI Hallucination", q:"What should you do when AI gives you a surprising fact?",
+   o:["Believe it if it sounds scientific.","Trust it if AI sounds confident.","Share it immediately with your friends.","Check the information using reliable sources."], a:3},
+  // ---- GIGO ----
+  {t:"GIGO", q:"What does GIGO stand for?",
+   o:["Good Information, Good Output","Garbage In, Garbage Out","Great Ideas, Great Opportunities","General Input, General Output"], a:1},
+  {t:"GIGO", q:"An AI receives incorrect information about a historical event. What is most likely to happen?",
+   o:["It will always recognize the mistake.","It will automatically correct the information.","It may produce an incorrect answer based on the information it received.","It will refuse to answer the question."], a:2},
+  {t:"GIGO", q:"Which action best helps prevent GIGO?",
+   o:["Giving AI as much information as possible, even if it is incorrect.","Using clear and reliable information as input.","Asking AI to answer as quickly as possible.","Trusting AI without checking its answers."], a:1},
+  // ---- Final Reflection ----
+  {t:"Final Reflection", q:"If both humans and AI can be fooled by patterns, make mistakes, and believe incorrect information, what is the most important lesson?",
+   o:["Humans should never use AI.","AI is always more intelligent than humans.","Mistakes are unavoidable, so checking information is pointless.","We should question information, check details, and think critically before trusting an answer."], a:3}
 ];
-let QUESTION_SECONDS = 30;       // time to answer before it counts as wrong
+let QUESTION_SECONDS = 45;       // seconds to answer before it counts as wrong
 const coord = (r,c) => String.fromCharCode(65+c) + (r+1);
 const grid2d = v => Array.from({length:SIZE}, () => Array(SIZE).fill(v));
 
@@ -1114,7 +1132,7 @@ function scoreLine(){
 function initScreenState(){
   S={phase:"lobby",round:1,players:[null,null],turn:null,winner:null,feed:[],
      boards:[grid2d(0),grid2d(0)],revealed:[[],[]],ev:{n:0,kind:""},last:null,history:[null,null],
-     qMode:"from2",deck:[],q:null,qn:0,cross:null,crossFx:null};
+     qMode:"from2",qSeconds:QUESTION_SECONDS,deck:[],q:null,qn:0,cross:null,crossFx:null};
 }
 const blankStats=()=>({shots:0,hits:0,sunk:0,lost:0,qok:0,qn:0});
 function newPlayer(id,name,slot){
@@ -1124,8 +1142,8 @@ function newPlayer(id,name,slot){
 }
 function feedAdd(text,kind){ S.feed.push({t:text,k:kind||""}); if(S.feed.length>12) S.feed.shift(); }
 function snapshot(){
-  const q=S.q&&{id:S.q.id,text:S.q.text,options:S.q.options,forId:S.q.forId,state:S.q.state,picked:S.q.picked,
-    correct:S.q.state==="asking"?-1:S.q.correct,seconds:S.q.seconds,left:Math.max(0,S.q.deadline-Date.now())};
+  const q=S.q&&{id:S.q.id,topic:S.q.topic,text:S.q.text,options:S.q.options,forId:S.q.forId,state:S.q.state,picked:S.q.picked,
+    correct:S.q.state==="asking"?-1:S.q.correct,seconds:S.q.seconds,left:S.q.seconds?Math.max(0,S.q.deadline-Date.now()):0};
   return {phase:S.phase,round:S.round,turn:S.turn,winner:S.winner,ev:S.ev,last:S.last,feed:S.feed.slice(-8),
     q:q||null,cross:S.crossFx,qMode:S.qMode,
     players:S.players.map(p=>p&&{id:p.id,name:p.name,wins:p.wins,ready:p.ready,again:p.again,shots:p.shots,hits:p.hits,sunk:p.sunk,lost:p.lost,qok:p.qok,qn:p.qn,online:p.online}),
@@ -1300,9 +1318,10 @@ function beginTurn(id){
   }
   const q=nextQuestion();
   S.qn++; pl.qn++;
-  S.q={id:S.qn,text:q.q,options:q.o.slice(0,4),correct:q.a,forId:id,state:"asking",picked:-1,seconds:QUESTION_SECONDS,deadline:Date.now()+QUESTION_SECONDS*1000};
-  channel.publish("game",{type:"question",sender:playerId,forId:id,qid:S.q.id,text:S.q.text,options:S.q.options,seconds:QUESTION_SECONDS}).catch(console.error);
-  qTimeout=setTimeout(()=>gradeQuestion(false,-1,true),QUESTION_SECONDS*1000+600);
+  const secs=S.qSeconds|0;                               // 0 = no time limit: the team MUST answer
+  S.q={id:S.qn,topic:q.t||"",text:q.q,options:q.o.slice(0,4),correct:q.a,forId:id,state:"asking",picked:-1,seconds:secs,deadline:secs?Date.now()+secs*1000:0};
+  channel.publish("game",{type:"question",sender:playerId,forId:id,qid:S.q.id,topic:S.q.topic,text:S.q.text,options:S.q.options,seconds:secs}).catch(console.error);
+  if(secs) qTimeout=setTimeout(()=>gradeQuestion(false,-1,true),secs*1000+600);
   pubState();
 }
 function gradeQuestion(ok,picked,timeout){
@@ -1359,7 +1378,7 @@ function startScreenView(){
   $("scrRoom").textContent="ROOM "+code;
   $("btnNext").hidden=false; $("btnScrCopy").hidden=false;
   scrLastEv=-1; scrNoteText=""; lastRendered=null; scrLastCross=0; scrQKey="";
-  $("qMode").hidden=false; $("qMode").value=S.qMode; if(!QUESTIONS.length) $("qMode").value="off";
+  $("qTime").hidden=false; $("qTime").value=String(S.qSeconds); $("qMode").hidden=false; $("qMode").value=S.qMode; if(!QUESTIONS.length) $("qMode").value="off";
   qBarTimer=setInterval(updateQBar,200);
   pubState();
   scrPub=setInterval(pubState,3000);
@@ -1392,7 +1411,7 @@ function startViewerView(){
   show("menu",false); show("game",false); show("screenView",true); menuMsg("");
   phase="screen"; muted=true; $("btnScrMute").textContent="🔇";
   $("scrRoom").textContent="WATCHING ROOM "+code;
-  $("btnNext").hidden=true; $("btnScrCopy").hidden=true; $("qMode").hidden=true;
+  $("btnNext").hidden=true; $("btnScrCopy").hidden=true; $("qMode").hidden=true; $("qTime").hidden=true;
   scrLastEv=-1; scrNoteText=""; lastRendered=null; scrLastCross=0; scrQKey="";
   qBarTimer=setInterval(updateQBar,200);
   viewTimer=setInterval(()=>{ if(Date.now()-lastStateAt>12000) scrNote("Waiting for the classroom screen…"); },4000);
@@ -1405,7 +1424,7 @@ function onQuestion(p){
   if(phase==="battle") refreshStatus();
 }
 function openQModal(p){
-  $("qText").textContent=String(p.text||"");
+  $("qText").textContent=String(p.text||""); $("qLabel").textContent=String(p.topic||"QUESTION").toUpperCase();
   const box=$("qOpts"); box.innerHTML="";
   (p.options||[]).slice(0,4).forEach((t,i)=>{
     const b=document.createElement("button"); b.className="btn qopt";
@@ -1413,9 +1432,10 @@ function openQModal(p){
     b.onclick=()=>answerQ(i); box.appendChild(b);
   });
   $("qNote").textContent="Choose the answer. The question is on the big screen too.";
-  qTotal=p.seconds||30; qEnd=Date.now()+qTotal*1000; $("qBar").style.width="100%";
+  qTotal=p.seconds||0; qEnd=Date.now()+qTotal*1000; $("qBar").style.width="100%";
   show("qModal",true);
   clearInterval(qTick);
+  if(!qTotal){ $("qNote").textContent="No time limit — choose an answer to continue."; return; }
   qTick=setInterval(()=>{
     const left=Math.max(0,qEnd-Date.now());
     $("qBar").style.width=(left/(qTotal*1000)*100)+"%";
@@ -1547,8 +1567,9 @@ function renderCenter(st){
 
 function updateQBar(){
   const st=lastRendered; if(!st||!st.q||st.q.state!=="asking") return;
-  const left=Math.max(0,qDeadlineLocal-Date.now());
   const bar=$("qwBar"), sec=$("qwSec");
+  if(!st.q.seconds){ if(bar) bar.style.width="100%"; if(sec) sec.textContent="∞"; return; }
+  const left=Math.max(0,qDeadlineLocal-Date.now());
   if(bar) bar.style.width=(left/(st.q.seconds*1000)*100)+"%";
   if(sec) sec.textContent=Math.ceil(left/1000)+"s";
 }
@@ -1570,7 +1591,7 @@ function renderQuestion(st){
   else if(q.state==="wrong") verdict=`<div class="verdict bad">❌ Wrong answer! The computer fires a cross-shaped shot at ${name}'s fleet!</div>`;
   else if(q.state==="timeout") verdict=`<div class="verdict bad">⏰ Time's up! The computer fires a cross-shaped shot at ${name}'s fleet!</div>`;
   const teacher=(mode==="screen"&&q.state==="asking")?`<div class="tbtns"><button class="btn small" id="tOk">Teacher: mark correct</button><button class="btn small warn" id="tBad">Teacher: mark wrong</button></div>`:"";
-  el.innerHTML=`<div class="glass qwin"><div class="qhead"><span class="qteam">${slot===0?"◀":"▶"} ${name}</span><span class="qsec" id="qwSec"></span></div>`+
+  el.innerHTML=`<div class="glass qwin"><div class="qhead"><span class="qteam">${slot===0?"◀":"▶"} ${name}</span><span class="qtopic">${esc(q.topic||"")}</span><span class="qsec" id="qwSec"></span></div>`+
     `<div class="qbarw"><i id="qwBar"></i></div><div class="qtext">${esc(q.text)}</div><div class="qgrid">${opts}</div>${verdict}${teacher}</div>`;
   if(teacher){ $("tOk").onclick=()=>gradeQuestion(true,-1,false); $("tBad").onclick=()=>gradeQuestion(false,-1,false); }
   updateQBar();
@@ -1607,6 +1628,7 @@ $("btnNext").onclick=()=>{
   if(S.phase==="battle" && !confirm("End this round and start again?")) return;
   newRound(S.phase==="battle");
 };
+$("qTime").onchange=()=>{ if(mode!=="screen"||!S) return; S.qSeconds=parseInt($("qTime").value,10)||0; feedAdd("Answer time: "+$("qTime").selectedOptions[0].text.replace("Answer time: ",""),""); pubState(); };
 $("qMode").onchange=()=>{ if(mode!=="screen"||!S) return; S.qMode=$("qMode").value; feedAdd("Questions: "+$("qMode").selectedOptions[0].text.replace("Questions: ",""),""); pubState(); };
 $("btnScrMute").onclick=()=>{ muted=!muted; $("btnScrMute").textContent=muted?"🔇":"🔊"; if(!muted) sfx.place(); };
 $("btnFull").onclick=()=>{

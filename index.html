@@ -360,8 +360,9 @@ select.btn option{color:#042a3a;background:#e8f4fb}
       <div class="chip" id="scrRoom"></div>
       <div class="right">
         <select class="btn small" id="qMode" title="When should teams answer a question?">
-          <option value="from2">Questions: from turn 2</option>
-          <option value="from1">Questions: every turn</option>
+          <option value="3">Questions: every 3rd turn</option>
+          <option value="2">Questions: every 2nd turn</option>
+          <option value="1">Questions: every turn</option>
           <option value="off">Questions: off</option>
         </select>
         <select class="btn small" id="qTime" title="How long do teams get to answer?">
@@ -838,7 +839,7 @@ function startBattle(first){
   setPhase("battle"); myTurn=first; qLock=(mode==="player"&&first); qState="";
   addLog(first?"The battle begins — you shoot first!":"The battle begins — the enemy shoots first.");
   renderAll(); refreshStatus();
-  if(mode==="ai" && !myTurn) setTimeout(aiShoot,1000);
+  if(mode==="ai"){ if(myTurn) practiceAsk(); else setTimeout(aiShoot,1000); }
 }
 function handle(msg){
   if(!msg||typeof msg!=="object") return;
@@ -859,7 +860,7 @@ function onShot(r,c){
   else { sfx.splash(); addLog(`Enemy fired at ${coord(r,c)} — miss.`); }
   renderAll();
   if(res.win){ endGame(false); }
-  else{ myTurn=true; if(mode==="player"){ qLock=true; qState=""; } renderFoe(); refreshStatus(); }
+  else{ myTurn=true; if(mode==="player"){ qLock=true; qState=""; } renderFoe(); refreshStatus(); if(mode==="ai") practiceAsk(); }
 }
 function onResult(m){
   const who=m.auto?"The computer fired at":"You fired at";
@@ -900,7 +901,7 @@ function endGame(won){
 }
 function resetForNewGame(){
   me.reset(); enemy=grid2d(0); enemySunk=new Set(); enemyShips=[]; logLines=[]; $("log").innerHTML=""; $("log").hidden=true;
-  selected=0; horiz=true; locked=false; iReady=false; theyReady=false; myTurn=false; lastFx=null; qLock=false; qState=""; closeQModal();
+  selected=0; horiz=true; locked=false; iReady=false; theyReady=false; myTurn=false; lastFx=null; qLock=false; qState=""; closeQModal(); practiceReset();
   if(mode==="ai") ai=newAI();
   show("endModal",false); setPhase("setup"); renderAll(); refreshStatus();
 }
@@ -931,6 +932,43 @@ function aiReceive(msg){
       });
     }
   }
+}
+/* ---------- Practice mode questions (all local, no classroom screen) ---------- */
+let pq=null, pqDeck=[], pqTimer=null, pTurns=0;
+function practiceReset(){ clearTimeout(pqTimer); pqTimer=null; pq=null; pTurns=0; }
+function practiceAsk(){
+  if(mode!=="ai"||phase!=="battle"||!myTurn||!QUESTIONS.length) return;
+  pTurns++;
+  if(pTurns%3!==0){ qLock=false; return; }                    // a question on every 3rd turn; the others are free
+  if(!pqDeck.length){
+    pqDeck=QUESTIONS.map((_,i)=>i);
+    for(let i=pqDeck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [pqDeck[i],pqDeck[j]]=[pqDeck[j],pqDeck[i]]; }
+  }
+  const q=QUESTIONS[pqDeck.pop()];
+  pq={q,done:false}; qLock=true; qState="mine";
+  openQModal({text:q.q,topic:q.t,options:q.o,seconds:0});       // no time limit: you must answer to continue
+  $("qNote").textContent="Practice: answer to take your shot. A wrong answer = the computer fires a cross at your fleet.";
+  renderFoe(); refreshStatus();
+}
+function practiceAnswer(i){
+  if(!pq||pq.done) return;
+  pq.done=true;
+  const ok=(i===pq.q.a);
+  [...$("qOpts").children].forEach((b,k)=>{ b.disabled=true; if(k===pq.q.a) b.classList.add("right"); else if(k===i) b.classList.add("wrong"); });
+  $("qNote").textContent=ok?"✅ Correct! Get ready to fire.":"❌ Wrong answer. The computer will fire a cross-shaped shot at your fleet!";
+  pqTimer=setTimeout(()=>{
+    pqTimer=null;
+    if(mode!=="ai"||phase!=="battle") return;
+    closeQModal(); pq=null;
+    if(ok){ qLock=false; qState=""; renderFoe(); refreshStatus(); return; }
+    const free=[]; for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++) if(me.shots[r][c]===0) free.push([r,c]);
+    if(!free.length){ qLock=false; qState=""; myTurn=false; setTimeout(aiShoot,800); return; }
+    const [cr,cc]=free[Math.floor(Math.random()*free.length)];
+    const cells=[[cr,cc],[cr-1,cc],[cr+1,cc],[cr,cc-1],[cr,cc+1]].filter(([r,c])=>r>=0&&c>=0&&r<SIZE&&c<SIZE&&me.shots[r][c]===0);
+    cells.forEach(([r,c])=>{ ai.shots[r][c]=1; });
+    applyCross(cells);
+    if(phase==="battle") setTimeout(aiShoot,1400);              // you lost your shot: the computer's turn
+  },2200);
 }
 function aiShoot(){
   if(phase!=="battle"||myTurn) return;
@@ -1132,9 +1170,9 @@ function scoreLine(){
 function initScreenState(){
   S={phase:"lobby",round:1,players:[null,null],turn:null,winner:null,feed:[],
      boards:[grid2d(0),grid2d(0)],revealed:[[],[]],ev:{n:0,kind:""},last:null,history:[null,null],
-     qMode:"from2",qSeconds:QUESTION_SECONDS,deck:[],q:null,qn:0,cross:null,crossFx:null};
+     qMode:"3",qSeconds:QUESTION_SECONDS,deck:[],q:null,qn:0,cross:null,crossFx:null};
 }
-const blankStats=()=>({shots:0,hits:0,sunk:0,lost:0,qok:0,qn:0});
+const blankStats=()=>({turns:0,shots:0,hits:0,sunk:0,lost:0,qok:0,qn:0});
 function newPlayer(id,name,slot){
   const h=S.history[slot];
   const wins=(h&&h.name.toLowerCase()===name.toLowerCase())?h.wins:0;   // same student rejoining keeps their wins
@@ -1305,13 +1343,14 @@ function nextQuestion(){
 }
 function needQuestion(pl){
   if(!QUESTIONS.length || S.qMode==="off") return false;
-  return pl.shots >= (S.qMode==="from2"?1:0);            // from2: a team's first turn is free
+  const n=parseInt(S.qMode,10)||3;                       // a question every n-th turn of this team (turns 1..n-1 are free)
+  return pl.turns % n === 0;
 }
 function beginTurn(id){
   clearQTimers();
   const pl=S.players.find(x=>x&&x.id===id);
   if(!pl||S.phase!=="battle") return;
-  S.turn=id; S.q=null;
+  S.turn=id; S.q=null; pl.turns=(pl.turns||0)+1;
   if(!needQuestion(pl)){
     channel.publish("game",{type:"go",sender:playerId,target:id}).catch(console.error);
     pubState(); return;
@@ -1443,6 +1482,7 @@ function openQModal(p){
   },200);
 }
 function answerQ(i){
+  if(mode==="ai"){ practiceAnswer(i); return; }
   const kids=[...$("qOpts").children]; kids.forEach(b=>b.disabled=true); kids[i].classList.add("picked");
   clearInterval(qTick);
   $("qNote").textContent="Answer sent… look at the big screen!";
@@ -1607,7 +1647,7 @@ function startGame(){
   $("log").hidden=true;
 }
 function leave(){
-  teardown(); ai=null; code=""; S=null; scrNoteText=""; scrLastEv=-1; lastRendered=null; closeQModal(); $("scrQ").hidden=true;
+  teardown(); practiceReset(); ai=null; code=""; S=null; scrNoteText=""; scrLastEv=-1; lastRendered=null; closeQModal(); $("scrQ").hidden=true;
   show("endModal",false); show("leftModal",false); show("game",false); show("screenView",false); show("menu",true);
   phase="menu"; menuMsg("");
 }

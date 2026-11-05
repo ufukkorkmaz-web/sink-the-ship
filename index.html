@@ -7,8 +7,9 @@
 <script src="https://cdn.ably.com/lib/ably.min-2.js" onerror="var s=document.createElement('script');s.src='https://unpkg.com/ably@2/browser/static/ably.min.js';document.head.appendChild(s)"></script>
 <style>
 :root{
+  --vw:100vw;--vh:100dvh;--u:1vw;   /* virtual viewport (set by fitApp when the window is small) */
   /* two boards side by side: size by both width and height so nothing scrolls */
-  --cell:clamp(18px,min(calc((100vw - 150px)/21.4),calc((100dvh - 330px)/10.7)),54px);
+  --cell:clamp(18px,min(calc((var(--vw) - 150px)/21.4),calc((var(--vh) - 330px)/10.7)),54px);
   --glass:rgba(255,255,255,.14);
   --glass-strong:rgba(255,255,255,.22);
   --edge:rgba(255,255,255,.38);
@@ -33,7 +34,7 @@ body{
 .waves{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.12;
   background:repeating-radial-gradient(circle at 50% 120%,transparent 0 38px,#fff 39px 40px)}
 
-#app{position:relative;z-index:1;height:100dvh;padding:10px 14px;display:flex;flex-direction:column;align-items:center}
+#app{position:relative;z-index:1;height:var(--vh);padding:10px 14px;display:flex;flex-direction:column;align-items:center}
 .screen{width:100%;max-width:1300px;height:100%}
 [hidden]{display:none!important}
 
@@ -66,8 +67,8 @@ body{
 /* ---------- Menu ---------- */
 #menu,#setPick{display:flex;justify-content:center;align-items:center;height:100%;overflow:auto}
 #game{display:flex;flex-direction:column;min-height:0}
-#game[data-phase="setup"]{--cell:clamp(20px,min(calc((100dvh - 270px)/10.7),calc((100vw - 400px)/10.9)),54px)}
-.hero{width:min(460px,100%);padding:36px 32px;text-align:center}
+#game[data-phase="setup"]{--cell:clamp(20px,min(calc((var(--vh) - 270px)/10.7),calc((var(--vw) - 400px)/10.9)),54px)}
+.hero{width:min(460px,100%);padding:26px 30px;text-align:center}
 .logo{font-size:3.4rem;filter:drop-shadow(0 6px 10px rgba(0,0,0,.3));animation:bob 3.5s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-6px) rotate(-4deg)}}
 h1{margin:6px 0 4px;font-size:2.3rem;letter-spacing:.5px}
@@ -176,8 +177,8 @@ h1{margin:6px 0 4px;font-size:2.3rem;letter-spacing:.5px}
 .log .hitl{color:#ffb4bb}.log .sunkl{color:#ffd166;font-weight:700}
 
 /* ---------- Modal ---------- */
-.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(4,20,45,.5);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-.modal .glass{width:min(460px,100%);padding:30px;text-align:center;animation:pop .35s both}
+.modal{overflow:hidden;position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(4,20,45,.5);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.modal .glass{scale:var(--ms,1);width:min(460px,100%);padding:30px;text-align:center;animation:pop .35s both}
 .modal h2{margin:0 0 8px;font-size:1.9rem}
 .modal p,.modal li{color:var(--muted);line-height:1.5}
 .modal ol{text-align:left;padding-left:22px}
@@ -196,13 +197,13 @@ h1{margin:6px 0 4px;font-size:2.3rem;letter-spacing:.5px}
 /* ---------- Classroom screen ---------- */
 #screenView{
   display:flex;flex-direction:column;min-height:0;max-width:1800px;
-  --cell:clamp(18px,min(calc((100vw - 480px)/21.4),calc((100dvh - 330px)/10.7)),62px);
+  --cell:clamp(18px,min(calc((var(--vw) - 480px)/21.4),calc((var(--vh) - 330px)/10.7)),62px);
 }
 .scr-main{display:grid;grid-template-columns:auto minmax(230px,330px) auto;gap:14px;justify-content:center;align-items:center;flex:1;min-height:0}
 .pcard{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 14px 12px;transition:box-shadow .3s,border-color .3s}
 .pcard .phead{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%}
-.pname{font-size:clamp(1.1rem,1.8vw,1.9rem);font-weight:800;max-width:12ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pwins{font-size:clamp(.95rem,1.4vw,1.5rem);font-weight:800;padding:2px 12px;border-radius:999px;background:rgba(255,255,255,.18);border:1px solid var(--edge);white-space:nowrap}
+.pname{font-size:clamp(1.1rem,calc(var(--u)*1.8),1.9rem);font-weight:800;max-width:12ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pwins{font-size:clamp(.95rem,calc(var(--u)*1.4),1.5rem);font-weight:800;padding:2px 12px;border-radius:999px;background:rgba(255,255,255,.18);border:1px solid var(--edge);white-space:nowrap}
 .pline{display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:center;align-items:center;font-size:.85rem;color:var(--muted)}
 .badge{padding:3px 12px;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);font-weight:700;color:var(--txt);letter-spacing:.5px}
 .badge.on{background:rgba(94,234,212,.4);border-color:var(--accent);animation:pulse 1.2s ease-in-out infinite}
@@ -213,7 +214,7 @@ h1{margin:6px 0 4px;font-size:2.3rem;letter-spacing:.5px}
 .pcard .fleetrow{margin-top:2px}
 .center{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;text-align:center;width:100%;overflow:hidden;max-height:calc(var(--cell)*10.7 + 150px)}
 .center .round{font-size:.85rem;letter-spacing:3px;color:var(--muted);font-weight:700}
-.center .score{display:flex;align-items:center;gap:14px;font-size:clamp(2rem,4vw,3.6rem);font-weight:800;line-height:1}
+.center .score{display:flex;align-items:center;gap:14px;font-size:clamp(2rem,calc(var(--u)*4),3.6rem);font-weight:800;line-height:1}
 .center .score i{font-style:normal;opacity:.6}
 .center .vs{font-size:.95rem;color:var(--muted);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .center .vs em{opacity:.7;margin:0 4px}
@@ -238,19 +239,19 @@ select.btn option{color:#042a3a;background:#e8f4fb}
 #screenView{position:relative}
 .scr-q{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(4,20,45,.62);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-radius:24px}
 .qwin{width:min(1150px,100%);padding:24px 32px;display:flex;flex-direction:column;gap:14px;animation:pop .35s both}
-.qhead{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:clamp(1.1rem,2vw,1.8rem)}
+.qhead{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:clamp(1.1rem,calc(var(--u)*2),1.8rem)}
 .qteam{padding:4px 18px;border-radius:999px;background:rgba(94,234,212,.3);border:1px solid var(--accent)}
-.qtopic{font-size:clamp(.9rem,1.4vw,1.3rem);letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700}
-.qsec{font-size:clamp(1.5rem,2.8vw,2.6rem);font-variant-numeric:tabular-nums}
+.qtopic{font-size:clamp(.9rem,calc(var(--u)*1.4),1.3rem);letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700}
+.qsec{font-size:clamp(1.5rem,calc(var(--u)*2.8),2.6rem);font-variant-numeric:tabular-nums}
 .qbarw{height:12px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden}
 .qbarw i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#5eead4,#38bdf8);border-radius:99px}
-.qtext{font-size:clamp(1.4rem,2.9vw,2.7rem);font-weight:700;line-height:1.25;text-align:center;padding:4px 0}
+.qtext{font-size:clamp(1.4rem,calc(var(--u)*2.9),2.7rem);font-weight:700;line-height:1.25;text-align:center;padding:4px 0}
 .qgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.qo{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:18px;border:1px solid var(--edge);background:rgba(255,255,255,.14);font-size:clamp(1.05rem,2vw,1.9rem);font-weight:600}
+.qo{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:18px;border:1px solid var(--edge);background:rgba(255,255,255,.14);font-size:clamp(1.05rem,calc(var(--u)*2),1.9rem);font-weight:600}
 .qo b{display:flex;width:2.1em;height:2.1em;align-items:center;justify-content:center;border-radius:12px;background:rgba(255,255,255,.25);flex-shrink:0}
 .qo.right{background:rgba(74,222,128,.5);border-color:#86efac}
 .qo.wrong{background:rgba(255,93,108,.5);border-color:#ff9aa2}
-.verdict{text-align:center;font-size:clamp(1.05rem,2.1vw,1.9rem);font-weight:800;padding:10px 14px;border-radius:16px}
+.verdict{text-align:center;font-size:clamp(1.05rem,calc(var(--u)*2.1),1.9rem);font-weight:800;padding:10px 14px;border-radius:16px}
 .verdict.ok{background:rgba(74,222,128,.3)}.verdict.bad{background:rgba(255,93,108,.3)}
 .tbtns{display:flex;gap:10px;justify-content:center}
 .modal .glass.qbox{width:min(660px,100%);padding:22px;text-align:left}
@@ -269,8 +270,8 @@ select.btn option{color:#042a3a;background:#e8f4fb}
 @media (max-height:640px){ .tip{display:none} }
 /* portrait screens (phones): stack the two boards, still no scrolling */
 @media (max-aspect-ratio:1/1){
-  :root{--cell:clamp(16px,min(calc((100vw - 60px)/10.9),calc((100dvh - 330px)/21.4)),44px)}
-  #game[data-phase="setup"]{--cell:clamp(18px,min(calc((100vw - 60px)/10.9),calc((100dvh - 520px)/10.7)),44px)}
+  :root{--cell:clamp(16px,min(calc((var(--vw) - 60px)/10.9),calc((var(--vh) - 330px)/21.4)),44px)}
+  #game[data-phase="setup"]{--cell:clamp(18px,min(calc((var(--vw) - 60px)/10.9),calc((var(--vh) - 520px)/10.7)),44px)}
   #app{padding:6px 8px}
   .boards{flex-direction:column;gap:6px}
   .fleetrow{display:none}
@@ -1736,6 +1737,19 @@ $("btnLeftWait").onclick=()=>show("leftModal",false);
 $("btnMute").onclick=()=>{ muted=!muted; $("btnMute").textContent=muted?"🔇":"🔊"; };
 ["btnHelp","btnHelp2"].forEach(id=>$(id).onclick=()=>show("helpModal",true));
 $("btnHelpClose").onclick=()=>show("helpModal",false);
+/* ---- fit to any window (e.g. a small Genially embed): lay out as if the window were at least 1000x700, then scale down ---- */
+function fitApp(){
+  const vw=window.innerWidth, vh=window.innerHeight, root=document.documentElement.style, app=$("app");
+  const s=(vw>=vh)?Math.min(1,vw/1000,vh/700):1;
+  if(s<0.999){
+    root.setProperty("--vw",(vw/s)+"px"); root.setProperty("--vh",(vh/s)+"px"); root.setProperty("--u",(vw/s/100)+"px"); root.setProperty("--ms",String(s));
+    app.style.width=(vw/s)+"px"; app.style.transform="scale("+s+")"; app.style.transformOrigin="0 0";
+  }else{
+    ["--vw","--vh","--u","--ms"].forEach(k=>root.removeProperty(k));
+    app.style.width=""; app.style.transform=""; app.style.transformOrigin="";
+  }
+}
+window.addEventListener("resize",fitApp); fitApp();
 window.addEventListener("pagehide",()=>{ if(mode==="player"&&joined) sendScreen({type:"bye"}); });
 </script>
 </body>

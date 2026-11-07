@@ -267,6 +267,87 @@ select.btn option{color:#042a3a;background:#e8f4fb}
 .qbox #qNote{margin:12px 0 0;min-height:1.4em;color:var(--txt);font-weight:600}
 @media (max-width:620px){ .qopts{grid-template-columns:1fr} }
 
+/* ---------- How-to-play intro (animated) ---------- */
+.modal .glass.intro{width:min(660px,100%);padding:20px 26px 22px;text-align:left}
+.in-top{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;letter-spacing:2px;color:var(--muted);font-weight:700}
+.in-top .linkbtn{margin:0;letter-spacing:0;font-size:.85rem}
+.intro h2{margin:4px 0 10px;font-size:1.7rem}
+.in-art{position:relative;height:190px;border-radius:18px;background:rgba(4,20,45,.35);border:1px solid var(--edge);overflow:hidden;display:flex;align-items:center;justify-content:center;gap:18px;padding:12px}
+.in-list{margin:12px 0 0;padding-left:22px;display:flex;flex-direction:column;gap:5px;min-height:112px}
+.in-list li{color:var(--txt);line-height:1.4;font-size:1rem}
+.in-list b{color:#5eead4}
+.in-dots{display:flex;gap:8px;justify-content:center;margin-top:10px}
+.in-dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.3);transition:.25s}
+.in-dots i.on{background:#5eead4;width:26px;border-radius:9px}
+.intro .row{margin-top:10px;justify-content:space-between}
+.in-slide{animation:inSlide .45s both}
+@keyframes inSlide{from{opacity:0;transform:translateX(18px)}}
+
+.in-btn{padding:8px 14px;border-radius:12px;font-weight:700;font-size:.85rem;color:#042a3a;background:linear-gradient(135deg,rgba(94,234,212,.9),rgba(56,189,248,.85));border:1px solid var(--edge);white-space:nowrap}
+.in-mon{width:300px;border-radius:12px;border:1px solid var(--edge);background:rgba(255,255,255,.1);padding:8px;display:flex;flex-direction:column;gap:8px;animation:inMon 7s ease-in-out infinite}
+@keyframes inMon{0%,10%{opacity:.25;transform:translateY(8px) scale(.97)}18%,92%{opacity:1;transform:none}100%{opacity:.25;transform:translateY(8px) scale(.97)}}
+.in-bar{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.8rem}
+.in-chip{display:flex;gap:3px;font-size:.62rem;align-items:center;letter-spacing:1px;color:var(--muted)}
+.in-chip i{font-style:normal;width:17px;height:21px;border-radius:5px;background:rgba(255,255,255,.22);border:1px solid var(--edge);display:grid;place-items:center;font-size:.85rem;font-weight:800;color:#fff;animation:inPop 7s infinite both;animation-delay:calc(var(--n)*.22s)}
+@keyframes inPop{0%,12%{opacity:0;transform:scale(.3)}18%{opacity:1;transform:scale(1.25)}22%,90%{opacity:1;transform:scale(1)}100%{opacity:0}}
+.in-two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.in-pc{border-radius:9px;background:rgba(255,255,255,.1);border:1px solid var(--edge);padding:6px 8px;font-size:.75rem;font-weight:700;display:flex;flex-direction:column;gap:2px}
+.in-pc em{font-style:normal;font-weight:500;color:var(--muted);font-size:.68rem}
+.in-pc .in-w{animation:inPulse 1.6s ease-in-out infinite}
+@keyframes inPulse{50%{opacity:.4}}
+.in-start{animation:inStart 7s ease-in-out infinite;position:relative}
+@keyframes inStart{0%,2%{transform:scale(1)}6%{transform:scale(.88);box-shadow:0 0 0 0 rgba(94,234,212,.9)}12%{transform:scale(1);box-shadow:0 0 0 16px rgba(94,234,212,0)}100%{transform:scale(1)}}
+.in-col{display:flex;flex-direction:column;align-items:center;gap:10px}
+
+.in-cb{width:230px;border-radius:12px;border:1px solid var(--edge);background:rgba(255,255,255,.1);padding:10px;display:flex;flex-direction:column;gap:8px}
+.in-field{height:30px;border-radius:9px;background:rgba(255,255,255,.14);border:1px solid var(--edge);padding:0 10px;display:flex;align-items:center;font-weight:700;font-size:.9rem;letter-spacing:2px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.in-field small{position:absolute;opacity:.4;font-size:.7rem;letter-spacing:1px;font-family:inherit}
+.in-type{display:inline-block;overflow:hidden;white-space:nowrap;width:0;border-right:2px solid #5eead4;animation:inType 7s steps(var(--n),end) infinite both;animation-delay:var(--d,0s)}
+@keyframes inType{0%,4%{width:0}30%,100%{width:calc(var(--n)*1ch + var(--n)*2px)}}
+.in-play{align-self:center;animation:inPlay 7s infinite}
+@keyframes inPlay{0%,55%{transform:scale(1)}60%{transform:scale(.88);box-shadow:0 0 0 0 rgba(94,234,212,.9)}68%{transform:scale(1);box-shadow:0 0 0 14px rgba(94,234,212,0)}100%{transform:scale(1)}}
+.in-board{display:grid;grid-template-columns:repeat(6,22px);grid-template-rows:repeat(6,22px);gap:3px;position:relative}
+.in-board u{border-radius:5px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);text-decoration:none;position:relative}
+.in-ship{position:absolute;border-radius:7px;background:linear-gradient(135deg,#7dd3fc,#38bdf8);box-shadow:0 0 8px rgba(56,189,248,.7);opacity:0;animation:inShip 7s infinite both;animation-delay:calc(var(--k)*.35s + 1.8s)}
+@keyframes inShip{0%{opacity:0;transform:translateY(-16px)}6%{opacity:1;transform:none}92%{opacity:1}100%{opacity:0}}
+.in-hd{position:relative;height:24px;display:flex;justify-content:center;align-items:flex-start}
+.in-hd .in-cap{animation:inCap 7s infinite both}
+@keyframes inCap{0%,50%{opacity:1}54%,92%{opacity:0}100%{opacity:1}}
+.in-ready{position:absolute;left:50%;top:-4px;translate:-50% 0;padding:4px 14px;animation:inReady 7s infinite both}
+@keyframes inReady{0%,50%{opacity:0;transform:scale(.6)}56%,92%{opacity:1;transform:scale(1)}100%{opacity:0}}
+.in-cap{font-size:.72rem;color:var(--muted);text-align:center;font-weight:700;letter-spacing:1px;margin-bottom:5px}
+
+.in-mark{position:absolute;inset:0;display:grid;place-items:center;opacity:0;animation:inMark 7s infinite both;animation-delay:var(--t)}
+.in-mark.hit::after{content:"";width:14px;height:14px;border-radius:50%;background:#ff5d6c;box-shadow:0 0 12px #ff5d6c}
+.in-mark.miss::after{content:"";width:11px;height:11px;border-radius:50%;background:#fff;box-shadow:0 0 8px #fff}
+@keyframes inMark{0%{opacity:0;transform:scale(2.4)}5%{opacity:1;transform:scale(1)}90%{opacity:1}100%{opacity:0}}
+.in-aim{position:absolute;left:0;top:0;width:22px;height:22px;border:2px solid #5eead4;border-radius:50%;box-shadow:0 0 10px #5eead4;animation:inAim 7s ease-in-out infinite;pointer-events:none}
+.in-aim::before,.in-aim::after{content:"";position:absolute;background:#5eead4}
+.in-aim::before{left:50%;top:-6px;bottom:-6px;width:2px;margin-left:-1px}
+.in-aim::after{top:50%;left:-6px;right:-6px;height:2px;margin-top:-1px}
+@keyframes inAim{0%{transform:translate(50px,0)}14%,26%{transform:translate(75px,50px)}40%,52%{transform:translate(25px,25px)}66%,78%{transform:translate(100px,75px)}92%,100%{transform:translate(50px,0)}}
+
+.in-q{width:290px;border-radius:12px;border:1px solid var(--edge);background:rgba(255,255,255,.1);padding:9px;display:flex;flex-direction:column;gap:6px}
+.in-qt{font-weight:800;font-size:.8rem;line-height:1.25}
+.in-qbar{height:6px;border-radius:9px;background:rgba(255,255,255,.2);overflow:hidden}
+.in-qbar i{display:block;height:100%;background:linear-gradient(90deg,#5eead4,#38bdf8);transform-origin:left;animation:inBar 9s linear infinite}
+@keyframes inBar{0%{transform:scaleX(1)}40%{transform:scaleX(.55)}50%{transform:scaleX(1)}90%{transform:scaleX(.45)}100%{transform:scaleX(1)}}
+.in-o{border-radius:8px;padding:4px 8px;font-size:.74rem;background:rgba(255,255,255,.14);border:1px solid var(--edge)}
+.in-o.ok{animation:inOk 9s infinite}
+.in-o.no{animation:inNo 9s infinite}
+@keyframes inOk{0%,16%{background:rgba(255,255,255,.14)}22%,44%{background:rgba(94,234,212,.55);border-color:#5eead4}50%,100%{background:rgba(255,255,255,.14)}}
+@keyframes inNo{0%,66%{background:rgba(255,255,255,.14)}72%,92%{background:rgba(255,93,108,.6);border-color:#ff5d6c}98%,100%{background:rgba(255,255,255,.14)}}
+.in-badge{position:absolute;top:8px;right:10px;font-weight:800;font-size:.8rem;padding:3px 10px;border-radius:99px;opacity:0}
+.in-badge.g{background:rgba(94,234,212,.9);color:#042a3a;animation:inB1 9s infinite}
+.in-badge.r{background:rgba(255,93,108,.95);color:#fff;animation:inB2 9s infinite}
+@keyframes inB1{0%,22%{opacity:0;transform:scale(.6)}28%,44%{opacity:1;transform:scale(1)}50%,100%{opacity:0}}
+@keyframes inB2{0%,72%{opacity:0;transform:scale(.6)}78%,92%{opacity:1;transform:scale(1)}98%,100%{opacity:0}}
+.in-cross{display:grid;grid-template-columns:repeat(5,20px);grid-template-rows:repeat(5,20px);gap:3px}
+.in-cross u{border-radius:5px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);text-decoration:none}
+.in-cross u.x{animation:inX 9s infinite both;animation-delay:calc(var(--k)*.12s)}
+@keyframes inX{0%,76%{background:rgba(255,255,255,.1);box-shadow:none}80%,94%{background:#ff5d6c;box-shadow:0 0 12px #ff5d6c}100%{background:rgba(255,255,255,.1);box-shadow:none}}
+@media (prefers-reduced-motion:reduce){ .in-art *{animation-iteration-count:1!important} }
+
 @media (max-height:640px){ .tip{display:none} }
 /* portrait screens (phones): stack the two boards, still no scrolling */
 @media (max-aspect-ratio:1/1){
@@ -407,6 +488,94 @@ select.btn option{color:#042a3a;background:#e8f4fb}
     </div>
     <div class="scr-q" id="scrQ" hidden></div>
   </section>
+</div>
+
+<div class="modal" id="introModal" hidden>
+  <div class="glass intro" role="dialog" aria-labelledby="inTitle">
+    <div class="in-top"><span id="inStep">1 / 4</span><button class="linkbtn" id="inSkip">Skip</button></div>
+    <h2 id="inTitle"></h2>
+
+    <section class="in-slide" data-title="1 · Start the game (teacher)">
+      <div class="in-art" aria-hidden="true">
+        <div class="in-col">
+          <div class="in-btn in-start">Start classroom screen</div>
+          <div class="in-mon">
+            <div class="in-bar">⚓ Sink the Fleet <span class="in-chip">ROOM <i style="--n:0">K</i><i style="--n:1">7</i><i style="--n:2">M</i><i style="--n:3">2</i><i style="--n:4">Q</i></span></div>
+            <div class="in-two"><div class="in-pc">Team 1<em class="in-w">waiting…</em></div><div class="in-pc">Team 2<em class="in-w">waiting…</em></div></div>
+          </div>
+        </div>
+      </div>
+      <ol class="in-list">
+        <li>Choose a question set: <b>Year 6 IPT</b> or <b>Year 7 IPT</b>.</li>
+        <li>Press <b>Start classroom screen</b> on the big screen.</li>
+        <li>Show the <b>room code</b> to your students. The scoreboard is live!</li>
+      </ol>
+    </section>
+
+    <section class="in-slide" data-title="2 · Join the game (students)" hidden>
+      <div class="in-art" aria-hidden="true">
+        <div class="in-cb">
+          <div class="in-cap" style="margin:0">YOUR CHROMEBOOK</div>
+          <div class="in-field"><span class="in-type" style="--n:4;--d:.2s">Ayşe</span></div>
+          <div class="in-field"><span class="in-type" style="--n:5;--d:1.1s">K7M2Q</span></div>
+          <div class="in-btn in-play">Play</div>
+        </div>
+        <div style="position:relative">
+          <div class="in-hd"><div class="in-cap">YOUR FLEET</div><div class="in-btn in-ready">Ready!</div></div>
+          <div class="in-board"><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u>
+            <b class="in-ship" style="--k:0;left:0;top:0;width:97px;height:22px"></b>
+            <b class="in-ship" style="--k:1;left:0;top:50px;width:22px;height:72px"></b>
+            <b class="in-ship" style="--k:2;left:50px;top:100px;width:72px;height:22px"></b>
+            <b class="in-ship" style="--k:3;left:125px;top:25px;width:22px;height:47px"></b>
+          </div>
+        </div>
+      </div>
+      <ol class="in-list">
+        <li>Open the game. Type your <b>name</b> and the <b>room code</b>.</li>
+        <li>Press <b>Play</b>. Two teams can join one room.</li>
+        <li>Place your 5 ships (or press <b>Random</b>), then press <b>Ready!</b></li>
+      </ol>
+    </section>
+
+    <section class="in-slide" data-title="3 · Fire at the enemy fleet" hidden>
+      <div class="in-art" aria-hidden="true">
+        <div>
+          <div class="in-cap">ENEMY WATERS</div>
+          <div class="in-board"><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u><span class="in-mark miss" style="--t:2.9s"></span></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u><span class="in-mark hit" style="--t:1.1s"></span></u><u></u><u></u><u></u><u></u><u></u><u></u><u><span class="in-mark hit" style="--t:4.7s"></span></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><span class="in-aim"></span></div>
+        </div>
+      </div>
+      <ol class="in-list">
+        <li>Take turns. Click a square in <b>Enemy waters</b> to fire.</li>
+        <li><b style="color:#ff8a94">Red</b> = hit. <b style="color:#fff">White</b> = miss.</li>
+        <li>Hit every square of a ship to sink it. Sink all <b>5 ships</b> to win!</li>
+      </ol>
+    </section>
+
+    <section class="in-slide" data-title="4 · Answer the questions" hidden>
+      <div class="in-art" aria-hidden="true">
+        <div class="in-q">
+          <div class="in-qt">Which action best helps prevent GIGO?</div>
+          <div class="in-qbar"><i></i></div>
+          <div class="in-o">A) Trusting AI without checking</div>
+          <div class="in-o ok">B) Using clear and reliable input</div>
+          <div class="in-o no">C) Asking AI to answer quickly</div>
+        </div>
+        <div>
+          <div class="in-cap">YOUR FLEET</div>
+          <div class="in-cross"><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u class="x" style="--k:3"></u><u></u><u></u><u></u><u class="x" style="--k:3"></u><u class="x" style="--k:4"></u><u class="x" style="--k:5"></u><u></u><u></u><u></u><u class="x" style="--k:5"></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u></div>
+        </div>
+        <span class="in-badge g">✅ You shoot!</span><span class="in-badge r">❌ Cross shot!</span>
+      </div>
+      <ol class="in-list">
+        <li>Every <b>3rd turn</b> a question appears. You must answer to continue.</li>
+        <li><b>Correct</b> = you fire your shot.</li>
+        <li><b>Wrong</b> = the computer fires a <b>cross-shaped</b> shot at your fleet, and you lose your shot.</li>
+      </ol>
+    </section>
+
+    <div class="in-dots" id="inDots"></div>
+    <div class="row"><button class="btn" id="inBack">Back</button><button class="btn primary" id="inNext">Next</button></div>
+  </div>
 </div>
 
 <!-- Modals -->
@@ -1735,7 +1904,30 @@ $("btnLeave").onclick=()=>{ if(confirm("Leave this game?")) leave(); };
 $("btnLeftOk").onclick=leave;
 $("btnLeftWait").onclick=()=>show("leftModal",false);
 $("btnMute").onclick=()=>{ muted=!muted; $("btnMute").textContent=muted?"🔇":"🔊"; };
-["btnHelp","btnHelp2"].forEach(id=>$(id).onclick=()=>show("helpModal",true));
+/* ---- animated how-to-play: opens once automatically, then from the "How to play" / ? buttons ---- */
+const INTRO_KEY="sinkfleet_intro_seen_v1";
+let inIdx=0;
+function introSlides(){ return [...document.querySelectorAll("#introModal .in-slide")]; }
+function introGo(i){
+  const sl=introSlides(); inIdx=Math.max(0,Math.min(sl.length-1,i));
+  sl.forEach((s,k)=>{ s.hidden=(k!==inIdx); });
+  $("inTitle").textContent=sl[inIdx].dataset.title;
+  $("inStep").textContent=(inIdx+1)+" / "+sl.length;
+  $("inDots").innerHTML=sl.map((_,k)=>'<i class="'+(k===inIdx?"on":"")+'"></i>').join("");
+  $("inBack").style.visibility=inIdx?"visible":"hidden";
+  $("inNext").textContent=inIdx===sl.length-1?"Let's play!":"Next";
+}
+function openIntro(){ introGo(0); show("introModal",true); }
+function closeIntro(){ show("introModal",false); try{ localStorage.setItem(INTRO_KEY,"1"); }catch(e){} }
+$("inNext").onclick=()=>{ if(inIdx>=introSlides().length-1) closeIntro(); else introGo(inIdx+1); };
+$("inBack").onclick=()=>introGo(inIdx-1);
+$("inSkip").onclick=closeIntro;
+document.addEventListener("keydown",e=>{
+  if($("introModal").hidden) return;
+  if(e.key==="ArrowRight") $("inNext").click(); else if(e.key==="ArrowLeft") introGo(inIdx-1); else if(e.key==="Escape") closeIntro();
+});
+["btnHelp","btnHelp2"].forEach(id=>$(id).onclick=openIntro);
+{ let seen=false; try{ seen=localStorage.getItem(INTRO_KEY)==="1"; }catch(e){} if(!seen) openIntro(); }
 $("btnHelpClose").onclick=()=>show("helpModal",false);
 /* ---- fit to any window (e.g. a small Genially embed): lay out as if the window were at least 1000x700, then scale down ---- */
 function fitApp(){
